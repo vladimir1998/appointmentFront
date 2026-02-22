@@ -1,0 +1,48 @@
+<div class="page-container">
+  <form class="employee-form" (ngSubmit)="onSubmit()" #empForm="ngForm">
+    <h2>Добавить сотрудника</h2>
+
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+
+    <div class="row">
+      <div class="field">
+        <label for="firstName">Имя <span class="required">*</span></label>
+        <input id="firstName" type="text" name="firstName" [(ngModel)]="firstName" required placeholder="Иван" />
+      </div>
+      <div class="field">
+        <label for="lastName">Фамилия <span class="required">*</span></label>
+        <input id="lastName" type="text" name="lastName" [(ngModel)]="lastName" required placeholder="Иванов" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="email">Email <span class="required">*</span></label>
+      <input id="email" type="email" name="email" [(ngModel)]="email" required placeholder="ivan@example.com" />
+    </div>
+
+    <div class="field">
+      <label for="password">Пароль <span class="required">*</span></label>
+      <input id="password" type="password" name="password" [(ngModel)]="password" required minlength="6" placeholder="••••••••" />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="phone">Телефон</label>
+        <input id="phone" type="tel" name="phone" [(ngModel)]="phone" placeholder="+7 900 000 00 00" />
+      </div>
+      <div class="field">
+        <label for="position">Должность</label>
+        <input id="position" type="text" name="position" [(ngModel)]="position" placeholder="Мастер" />
+      </div>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn-cancel" (click)="cancel()">Отмена</button>
+      <button type="submit" [disabled]="empForm.invalid || loading()">
+        {{ loading() ? 'Сохранение...' : 'Добавить' }}
+      </button>
+    </div>
+  </form>
+</div>

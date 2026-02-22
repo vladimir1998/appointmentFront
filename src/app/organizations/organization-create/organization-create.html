@@ -1,0 +1,47 @@
+<div class="page-container">
+  <form class="create-form" (ngSubmit)="onSubmit()" #orgForm="ngForm">
+    <h2>Создать организацию</h2>
+
+    @if (error()) {
+      <div class="error">{{ error() }}</div>
+    }
+
+    <div class="field">
+      <label for="name">Название <span class="required">*</span></label>
+      <input
+        id="name"
+        type="text"
+        name="name"
+        [(ngModel)]="name"
+        required
+        placeholder="Название организации"
+      />
+    </div>
+
+    <div class="field">
+      <label for="description">Описание</label>
+      <textarea
+        id="description"
+        name="description"
+        [(ngModel)]="description"
+        placeholder="Краткое описание организации"
+        rows="3"
+      ></textarea>
+    </div>
+
+    <div class="field">
+      <label for="logo">Логотип (URL)</label>
+      <input
+        id="logo"
+        type="url"
+        name="logo"
+        [(ngModel)]="logo"
+        placeholder="https://example.com/logo.png"
+      />
+    </div>
+
+    <button type="submit" [disabled]="orgForm.invalid || loading()">
+      {{ loading() ? 'Сохранение...' : 'Создать' }}
+    </button>
+  </form>
+</div>

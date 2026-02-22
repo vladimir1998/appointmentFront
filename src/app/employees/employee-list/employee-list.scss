@@ -1,0 +1,29 @@
+.page-container {
+  padding: 40px 24px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 { margin: 0; }
+
+  .btn-create {
+    padding: 8px 16px;
+    background-color: #4f46e5;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    &:hover { background-color: #4338ca; }
+  }
+}
+
+.status {
+  color: #6b7280;
+  font-size: 14px;
+}

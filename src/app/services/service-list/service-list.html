@@ -1,0 +1,56 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Услуги</h2>
+    <a class="btn-create" routerLink="/services/create">+ Создать</a>
+  </div>
+
+  @if (loading()) {
+    <p class="status">Загрузка...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (services().length === 0) {
+    <p class="status">Услуги не найдены</p>
+  } @else {
+    <ul class="service-list">
+      @for (service of services(); track service.id) {
+        <li class="service-item">
+          <div class="service-info">
+            @if (service.photo) {
+              <img class="service-photo" [src]="service.photo" [alt]="service.title" />
+            } @else {
+              <div class="service-photo placeholder">{{ service.title[0] }}</div>
+            }
+            <div class="service-details">
+              <span class="service-title">{{ service.title }}</span>
+              <span class="service-meta">
+                {{ service.price | number:'1.2-2' }} ₽ &nbsp;·&nbsp;
+                {{ service.duration }} мин
+                @if (service.durationMax) { – {{ service.durationMax }} мин }
+              </span>
+              <span class="service-description">{{ service.description }}</span>
+            </div>
+          </div>
+          <div class="service-actions">
+            <button class="btn-edit" (click)="edit(service)">✏️</button>
+            <button class="btn-delete" (click)="openDeleteModal(service)">🗑</button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>
+
+@if (deleteTarget()) {
+  <div class="modal-overlay" (click)="cancelDelete()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Удалить услугу?</h3>
+      <p>«{{ deleteTarget()!.title }}» будет удалена без возможности восстановления.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelDelete()">Отмена</button>
+        <button class="btn-confirm-delete" [disabled]="deleteLoading()" (click)="confirmDelete()">
+          {{ deleteLoading() ? 'Удаление...' : 'Удалить' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

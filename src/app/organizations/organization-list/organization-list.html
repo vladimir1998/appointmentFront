@@ -1,0 +1,32 @@
+<div class="page-container">
+  <div class="page-header">
+    <h2>Организации</h2>
+    <a class="btn-create" routerLink="/organizations/create">+ Создать</a>
+  </div>
+
+  @if (loading()) {
+    <p class="status">Загрузка...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (organizations().length === 0) {
+    <p class="status">Организации не найдены</p>
+  } @else {
+    <ul class="org-list">
+      @for (org of organizations(); track org.id) {
+        <li class="org-item" (click)="selectOrganization(org)">
+          @if (org.logo) {
+            <img class="org-logo" [src]="org.logo" [alt]="org.name" />
+          } @else {
+            <div class="org-logo placeholder">{{ org.name[0] }}</div>
+          }
+          <div class="org-info">
+            <span class="org-name">{{ org.name }}</span>
+            @if (org.description) {
+              <span class="org-description">{{ org.description }}</span>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>

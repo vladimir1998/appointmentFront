@@ -1,0 +1,44 @@
+.dashboard {
+  padding: 40px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+
+  h1 {
+    margin: 0 0 32px;
+  }
+}
+
+.nav-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.nav-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 140px;
+  height: 120px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    border-color: #4f46e5;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.12);
+  }
+
+  &__icon {
+    font-size: 32px;
+  }
+
+  &__label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+}

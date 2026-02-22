@@ -1,0 +1,86 @@
+.page-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.service-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 560px;
+
+  h2 { margin: 0; }
+
+  .status { color: #6b7280; font-size: 14px; }
+
+  .error {
+    padding: 10px 12px;
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      .required { color: #ef4444; }
+    }
+
+    input, textarea {
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      resize: vertical;
+
+      &:focus { border-color: #4f46e5; }
+    }
+  }
+
+  .row {
+    display: flex;
+    gap: 12px;
+
+    .field { flex: 1; }
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &[type='submit'] {
+        background-color: #4f46e5;
+        color: #fff;
+
+        &:disabled { opacity: 0.5; cursor: not-allowed; }
+        &:hover:not(:disabled) { background-color: #4338ca; }
+      }
+    }
+
+    .btn-cancel {
+      background-color: #f3f4f6;
+      color: #374151;
+
+      &:hover { background-color: #e5e7eb; }
+    }
+  }
+}
