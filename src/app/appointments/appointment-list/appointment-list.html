@@ -1,0 +1,51 @@
+<div class="page-container">
+  <div class="page-header">
+    <button class="btn-back" (click)="goBack()">← Назад</button>
+    <h2>Заказы</h2>
+    <a class="btn-create" routerLink="/appointments/create">+ Создать</a>
+  </div>
+
+  @if (loading()) {
+    <p class="status">Загрузка...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (appointments().length === 0) {
+    <p class="status">Заказы не найдены</p>
+  } @else {
+    <ul class="appointment-list">
+      @for (appt of appointments(); track appt.id) {
+        <li class="appointment-item">
+          <div class="appointment-info">
+            <span class="appointment-client">{{ appt.clientName }}</span>
+            <span class="appointment-meta">
+              {{ appt.startTime | date:'dd.MM.yyyy HH:mm' }}
+              @if (appt.status) { · {{ appt.status }} }
+            </span>
+            @if (appt.clientPhone) {
+              <span class="appointment-phone">{{ appt.clientPhone }}</span>
+            }
+          </div>
+          <div class="appointment-actions">
+            <button class="btn-edit" (click)="edit(appt)">✏️</button>
+            <button class="btn-delete" (click)="openDeleteModal(appt)">🗑</button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>
+
+@if (deleteTarget()) {
+  <div class="modal-overlay" (click)="cancelDelete()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3>Удалить заказ?</h3>
+      <p>Заказ клиента «{{ deleteTarget()!.clientName }}» будет удалён без возможности восстановления.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="cancelDelete()">Отмена</button>
+        <button class="btn-confirm-delete" [disabled]="deleteLoading()" (click)="confirmDelete()">
+          {{ deleteLoading() ? 'Удаление...' : 'Удалить' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

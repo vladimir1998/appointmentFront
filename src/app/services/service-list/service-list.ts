@@ -44,6 +44,10 @@ export class ServiceList implements OnInit {
     });
   }
 
+  goBack(): void {
+    this.router.navigate(['/dashboard', this.orgContext.currentOrgId()]);
+  }
+
   edit(service: Service): void {
     this.router.navigate(['/services', service.id, 'edit']);
   }

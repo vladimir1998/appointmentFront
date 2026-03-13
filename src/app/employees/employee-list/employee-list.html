@@ -1,7 +1,33 @@
 <div class="page-container">
   <div class="page-header">
+    <button class="btn-back" (click)="goBack()">← Назад</button>
     <h2>Сотрудники</h2>
     <a class="btn-create" routerLink="/employees/create">+ Добавить</a>
   </div>
-  <p class="status">Список сотрудников будет здесь</p>
+
+  @if (loading()) {
+    <p class="status">Загрузка...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (employees().length === 0) {
+    <p class="status">Сотрудники не найдены</p>
+  } @else {
+    <ul class="employee-list">
+      @for (emp of employees(); track emp.id) {
+        <li class="employee-item" (click)="edit(emp)">
+          <div class="employee-avatar">{{ emp.firstName[0] }}{{ emp.lastName[0] }}</div>
+          <div class="employee-info">
+            <span class="employee-name">{{ emp.firstName }} {{ emp.lastName }}</span>
+            <span class="employee-meta">
+              @if (emp.position?.name) { {{ emp.position!.name }} · }
+              {{ emp.user.email }}
+            </span>
+            @if (emp.phone) {
+              <span class="employee-phone">{{ emp.phone }}</span>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  }
 </div>

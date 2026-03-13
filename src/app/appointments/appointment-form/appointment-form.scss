@@ -1,17 +1,19 @@
-.page-container {
+﻿.page-container {
   display: flex;
   justify-content: center;
   padding: 40px 16px;
 }
 
-.employee-form {
+.appointment-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
   width: 100%;
-  max-width: 520px;
+  max-width: 560px;
 
   h2 { margin: 0; }
+
+  .status { color: #6b7280; font-size: 14px; }
 
   .error {
     padding: 10px 12px;
@@ -38,7 +40,7 @@
       .required { color: #ef4444; }
     }
 
-    input, select {
+    input, select, textarea {
       padding: 10px 12px;
       border: 1px solid #ccc;
       border-radius: 6px;
@@ -46,6 +48,8 @@
       font-family: inherit;
       outline: none;
       background-color: #fff;
+      resize: vertical;
+
       &:focus { border-color: #4f46e5; }
       &:disabled { background-color: #f9fafb; color: #9ca3af; cursor: not-allowed; }
     }

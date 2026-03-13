@@ -9,6 +9,8 @@ import { EmployeeList } from './employees/employee-list/employee-list';
 import { EmployeeForm } from './employees/employee-form/employee-form';
 import { PositionList } from './positions/position-list/position-list';
 import { PositionForm } from './positions/position-form/position-form';
+import { AppointmentList } from './appointments/appointment-list/appointment-list';
+import { AppointmentForm } from './appointments/appointment-form/appointment-form';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -20,8 +22,12 @@ export const routes: Routes = [
   { path: 'services/:id/edit', component: ServiceForm },
   { path: 'employees', component: EmployeeList },
   { path: 'employees/create', component: EmployeeForm },
+  { path: 'employees/:id/edit', component: EmployeeForm },
   { path: 'positions', component: PositionList },
   { path: 'positions/create', component: PositionForm },
   { path: 'positions/:id/edit', component: PositionForm },
+  { path: 'appointments', component: AppointmentList },
+  { path: 'appointments/create', component: AppointmentForm },
+  { path: 'appointments/:id/edit', component: AppointmentForm },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];

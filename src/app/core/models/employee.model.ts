@@ -1,11 +1,25 @@
-export interface Employee {
+import { Position } from './position.model';
+
+export interface EmployeeUser {
   id: string;
   email: string;
+}
+
+export interface Employee {
+  id: string;
   firstName: string;
   lastName: string;
   phone?: string;
-  position?: string;
+  role: string;
+  isActive: boolean;
+  userId: string;
   organizationId: string;
+  positionId?: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string | null;
+  user: EmployeeUser;
+  position?: Position;
 }
 
 export interface RegisterEmployeeRequest {
@@ -14,6 +28,13 @@ export interface RegisterEmployeeRequest {
   firstName: string;
   lastName: string;
   phone?: string;
-  position?: string;
+  positionId?: string;
   organizationId: string;
+}
+
+export interface UpdateEmployeeRequest {
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  positionId?: string;
 }
