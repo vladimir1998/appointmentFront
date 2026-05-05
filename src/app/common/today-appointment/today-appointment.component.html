@@ -1,0 +1,38 @@
+<div class="appointment-card">
+    <div class="appointment-content">
+      <div class="appointment-user-info">
+        <img src="/image-circle-profile.png" alt="profile" />
+        <div class="appointment-user-info-details">
+          <div class="user-name">
+            Sarah Mitchell
+          </div>
+          <div class="doctor-info">
+            <span>
+              Dr. James Wilson
+            </span>
+            <span>
+              Cardiology
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="appointment-duration">
+        <span>
+          30 min
+        </span>
+        <span>
+          Follow-up
+        </span>
+        <span>
+          - Patient requested reschedule
+        </span>
+      </div>
+    </div>
+    <div class="appointment-actions">
+      <app-custom-select
+        [options]="statusOptions"
+        [value]="selectedStatus()"
+        (valueChange)="selectedStatus.set($event)"
+      />
+    </div>
+  </div>

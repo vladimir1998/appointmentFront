@@ -1,0 +1,27 @@
+<div class="custom-select" [class.open]="selectOpen()">
+  <button 
+    type="button" 
+    class="custom-select-trigger" 
+    (click)="toggleSelect()" 
+    (blur)="onSelectBlur()" 
+    [style.color]="getStatusIcon(value()).color"
+    [style.background-color]="getStatusIcon(value()).bgColor"
+  >
+    <div class="custom-select-trigger-icon">
+      <img [src]="getStatusIcon(value()).icon" [alt]="value()" />
+    </div>
+    <span>{{ value() }}</span>
+  </button>
+  <ul class="custom-select-dropdown">
+    @for (opt of options(); track opt) {
+      <li>
+        <button type="button" (mousedown)="selectOption(opt)" [class.selected]="value() === opt" [style.color]="getStatusIcon(opt).color">
+          <div class="custom-select-trigger-icon" [style.background-color]="getStatusIcon(opt).bgColor">
+            <img [src]="getStatusIcon(opt).icon" [alt]="opt" />
+          </div>
+          {{ opt }}
+        </button>
+      </li>
+    }
+  </ul>
+</div>

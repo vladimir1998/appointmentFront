@@ -11,9 +11,11 @@ import { PositionList } from './positions/position-list/position-list';
 import { PositionForm } from './positions/position-form/position-form';
 import { AppointmentList } from './appointments/appointment-list/appointment-list';
 import { AppointmentForm } from './appointments/appointment-form/appointment-form';
+import { Components } from './components/components';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
+  { path: 'components', component: Components },
   { path: 'dashboard/:orgId', component: Dashboard },
   { path: 'organizations', component: OrganizationList },
   { path: 'organizations/create', component: OrganizationCreate },
