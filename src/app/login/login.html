@@ -1,37 +1,101 @@
-<div class="login-container">
-  <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
-    <h2>Вход</h2>
+<div class="login-grid">
 
-    @if (error()) {
-      <div class="error">{{ error() }}</div>
-    }
+  <!-- Left panel -->
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+      <div class="brand-stack">
+        <div class="brand-name">MedCRM</div>
+        <div class="brand-tag">Healthcare Management Platform</div>
+      </div>
+    </div>
 
-    <div class="field">
-      <label for="email">Email</label>
-      <input
-        id="email"
+    <div class="hero">
+      <h2>Streamline your<span class="accent">healthcare practice</span></h2>
+      <p>Manage clients, coordinate with doctors, and keep your schedule organized — all in one place.</p>
+      <div class="stats-row">
+        <div class="stat-mini">
+          <div class="stat-v">1.2K+</div>
+          <div class="stat-l">Active Clients</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-v">34</div>
+          <div class="stat-l">Doctors</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-v">98%</div>
+          <div class="stat-l">Satisfaction</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="login-foot">© 2026 MedCRM. All rights reserved.</div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="login-right">
+    <form class="login-form" (ngSubmit)="onSubmit()" #loginForm="ngForm">
+      <h3>Welcome back</h3>
+      <div class="form-helper">Sign in to your account to continue</div>
+
+      @if (error()) {
+        <div class="form-error">{{ error() }}</div>
+      }
+
+      <app-input
+        label="Email address"
+        placeholder="john@medcrm.com"
         type="email"
-        name="email"
-        [(ngModel)]="email"
-        required
-        placeholder="example@mail.com"
+        [(value)]="email"
       />
-    </div>
 
-    <div class="field">
-      <label for="password">Пароль</label>
-      <input
-        id="password"
-        type="password"
-        name="password"
-        [(ngModel)]="password"
-        required
-        placeholder="••••••••"
-      />
-    </div>
+      <div class="field">
+        <div class="label-row">
+          <label>Password</label>
+          <a href="#" class="link" (click)="$event.preventDefault()">Forgot password?</a>
+        </div>
+        <app-input
+          placeholder="Enter your password"
+          type="password"
+          [(value)]="password"
+        />
+      </div>
 
-    <button type="submit" [disabled]="loginForm.invalid || loading()">
-      {{ loading() ? 'Входим...' : 'Войти' }}
-    </button>
-  </form>
+      <div class="check-row">
+        <button
+          type="button"
+          class="checkbox"
+          [class.checked]="rememberMe()"
+          (click)="rememberMe.set(!rememberMe())"
+          aria-label="Keep me signed in"
+        >
+          @if (rememberMe()) {
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          }
+        </button>
+        <span class="check-label" (click)="rememberMe.set(!rememberMe())">Keep me signed in</span>
+      </div>
+
+      <button class="btn-submit" type="submit" [disabled]="loginForm.invalid || loading()">
+        {{ loading() ? 'Signing in…' : 'Sign in' }}
+        @if (!loading()) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        }
+      </button>
+
+      <div class="signup-line">
+        Don't have an account?<a href="#" class="link" (click)="$event.preventDefault()">Contact admin</a>
+      </div>
+    </form>
+  </div>
+
 </div>

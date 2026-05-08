@@ -1,71 +1,325 @@
-.login-container {
+.login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+}
+
+/* ── Left panel ──────────────────────────────── */
+.login-left {
+  background: #0B1220;
+  color: #fff;
+  padding: 40px 56px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -120px; right: -180px;
+    width: 480px; height: 480px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #122035 0%, transparent 70%);
+    pointer-events: none;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -160px; left: -160px;
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #102b3a 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+.login-brand {
+  display: flex;
   align-items: center;
-  height: 100vh;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+
+  .brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--teal-500);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .brand-stack {
+    line-height: 1.2;
+  }
+
+  .brand-name {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-tag {
+    font-size: 12px;
+    color: #6B7689;
+    margin-top: 2px;
+  }
+}
+
+.hero {
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
+  max-width: 460px;
+
+  h2 {
+    font-size: 40px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+  }
+
+  .accent {
+    color: var(--side-active-fg);
+    display: block;
+  }
+
+  p {
+    color: #94A3B8;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 36px;
+  }
+}
+
+.stats-row {
+  display: flex;
+  gap: 56px;
+}
+
+.stat-mini {
+  .stat-v {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .stat-l {
+    font-size: 12px;
+    color: #6B7689;
+    margin-top: 4px;
+  }
+}
+
+.login-foot {
+  margin-top: auto;
+  padding-top: 56px;
+  font-size: 12px;
+  color: #4B5468;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Right panel ─────────────────────────────── */
+.login-right {
+  background: #F7F8FA;
+  display: grid;
+  place-items: center;
+  padding: 40px;
 }
 
 .login-form {
+  width: 100%;
+  max-width: 380px;
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .form-helper {
+    color: var(--text-muted);
+    font-size: 13.5px;
+    margin-bottom: 28px;
+  }
+
+  .form-error {
+    padding: 10px 12px;
+    background: #FEF2F2;
+    color: #B91C1C;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+}
+
+.field {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  width: 320px;
-  padding: 32px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  gap: 6px;
+  margin-bottom: 16px;
 
-  h2 {
-    margin: 0;
-    text-align: center;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-
-    label {
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    input {
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
-      outline: none;
-
-      &:focus {
-        border-color: #4f46e5;
-      }
-    }
-  }
-
-  .error {
-    padding: 10px 12px;
-    background-color: #fee2e2;
-    color: #b91c1c;
-    border-radius: 6px;
+  label {
     font-size: 13px;
+    font-weight: 500;
+    color: var(--label);
+  }
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.link {
+  font-size: 12px;
+  color: var(--teal-500);
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    color: var(--teal-600);
+    text-decoration: underline;
+  }
+}
+
+.input {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+
+  &::placeholder {
+    color: var(--text-subtle);
   }
 
-  button {
-    padding: 10px;
-    background-color: #4f46e5;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
+  &:focus {
+    border-color: var(--teal-500);
+    box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
+  }
+}
 
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+.password-wrap {
+  position: relative;
 
-    &:hover:not(:disabled) {
-      background-color: #4338ca;
-    }
+  .input {
+    padding-right: 40px;
+  }
+}
+
+.eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 6px;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  line-height: 0;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+}
+
+/* ── Checkbox ────────────────────────────────── */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 22px;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  transition: background 0.15s, border-color 0.15s;
+
+  &.checked {
+    background: var(--teal-500);
+    border-color: var(--teal-500);
+  }
+}
+
+.check-label {
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ── Submit button ───────────────────────────── */
+.btn-submit {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--teal-500);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14.5px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  &:hover:not(:disabled) {
+    background: var(--teal-600);
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+/* ── Sign-up line ────────────────────────────── */
+.signup-line {
+  text-align: center;
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--text-muted);
+
+  .link {
+    margin-left: 4px;
   }
 }

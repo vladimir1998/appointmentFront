@@ -1,0 +1,18 @@
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f1f5f9;
+  color: #0f172a;
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+
+  svg {
+    width: 11px;
+    height: 11px;
+    color: #64748b;
+    flex-shrink: 0;
+  }
+}

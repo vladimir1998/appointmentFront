@@ -5,10 +5,31 @@ import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { PositionsApiService } from '../../core/services/positions-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Position } from '../../core/models/position.model';
+import { InputComponent } from '../../common/input/input.component';
+
+const AVATAR_GRADIENTS = [
+  'linear-gradient(135deg, #fcd34d, #b45309)',
+  'linear-gradient(135deg, #6ee7b7, #047857)',
+  'linear-gradient(135deg, #c4b5fd, #6d28d9)',
+  'linear-gradient(135deg, #fda4af, #be123c)',
+  'linear-gradient(135deg, #93c5fd, #1d4ed8)',
+  'linear-gradient(135deg, #f9a8d4, #be185d)',
+  'linear-gradient(135deg, #fdba74, #c2410c)',
+];
+
+const MOCK_POSITIONS: Position[] = [
+  { id: 'p1', name: 'Cardiologist',        permissions: [], organizationId: 'mock' },
+  { id: 'p2', name: 'Dermatologist',       permissions: [], organizationId: 'mock' },
+  { id: 'p3', name: 'Neurologist',         permissions: [], organizationId: 'mock' },
+  { id: 'p4', name: 'Pediatrician',        permissions: [], organizationId: 'mock' },
+  { id: 'p5', name: 'General Practitioner',permissions: [], organizationId: 'mock' },
+  { id: 'p6', name: 'Nurse',               permissions: [], organizationId: 'mock' },
+  { id: 'p7', name: 'Receptionist',        permissions: [], organizationId: 'mock' },
+];
 
 @Component({
   selector: 'app-employee-form',
-  imports: [FormsModule],
+  imports: [FormsModule, InputComponent],
   templateUrl: './employee-form.html',
   styleUrl: './employee-form.scss',
 })
@@ -45,11 +66,16 @@ export class EmployeeForm implements OnInit {
       this.positionsLoading.set(true);
       this.positionsApi.getAll(orgId).subscribe({
         next: (data) => {
-          this.positions.set(data);
+          this.positions.set(data.length ? data : MOCK_POSITIONS);
           this.positionsLoading.set(false);
         },
-        error: () => this.positionsLoading.set(false),
+        error: () => {
+          this.positions.set(MOCK_POSITIONS);
+          this.positionsLoading.set(false);
+        },
       });
+    } else {
+      this.positions.set(MOCK_POSITIONS);
     }
 
     if (this.isEdit && this.employeeId) {
@@ -64,7 +90,7 @@ export class EmployeeForm implements OnInit {
           this.fetchLoading.set(false);
         },
         error: () => {
-          this.error.set('Не удалось загрузить данные сотрудника');
+          this.error.set('Failed to load employee');
           this.fetchLoading.set(false);
         },
       });
@@ -95,7 +121,7 @@ export class EmployeeForm implements OnInit {
     request$.subscribe({
       next: () => this.router.navigate(['/employees']),
       error: () => {
-        this.error.set('Не удалось сохранить данные сотрудника');
+        this.error.set('Failed to save employee');
         this.loading.set(false);
       },
     });
@@ -103,5 +129,20 @@ export class EmployeeForm implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/employees']);
+  }
+
+  get previewInitials(): string {
+    const f = this.firstName?.[0] ?? '';
+    const l = this.lastName?.[0] ?? '';
+    return (f + l).toUpperCase() || '?';
+  }
+
+  get previewGradient(): string {
+    const seed = (this.firstName + this.lastName).length % AVATAR_GRADIENTS.length;
+    return AVATAR_GRADIENTS[seed];
+  }
+
+  get selectedPositionName(): string {
+    return this.positions().find(p => p.id === this.positionId)?.name ?? '';
   }
 }

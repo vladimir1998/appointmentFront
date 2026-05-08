@@ -1,33 +1,132 @@
-<div class="page-container">
-  <div class="page-header">
-    <button class="btn-back" (click)="goBack()">← Назад</button>
-    <h2>Сотрудники</h2>
-    <a class="btn-create" routerLink="/employees/create">+ Добавить</a>
+<!-- Page header -->
+<div class="page-head">
+  <div>
+    <h1 class="page-title">Employees</h1>
+    <p class="page-sub">Browse and manage your clinic's staff</p>
+  </div>
+  <a class="btn-primary" routerLink="/employees/create">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Add employee
+  </a>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      class="search-input"
+      placeholder="Search by name or position..."
+      [value]="searchQuery()"
+      (input)="searchQuery.set($any($event.target).value)"
+    />
   </div>
 
-  @if (loading()) {
-    <p class="status">Загрузка...</p>
-  } @else if (error()) {
-    <p class="status error">{{ error() }}</p>
-  } @else if (employees().length === 0) {
-    <p class="status">Сотрудники не найдены</p>
-  } @else {
-    <ul class="employee-list">
-      @for (emp of employees(); track emp.id) {
-        <li class="employee-item" (click)="edit(emp)">
-          <div class="employee-avatar">{{ emp.firstName[0] }}{{ emp.lastName[0] }}</div>
-          <div class="employee-info">
-            <span class="employee-name">{{ emp.firstName }} {{ emp.lastName }}</span>
-            <span class="employee-meta">
-              @if (emp.position?.name) { {{ emp.position!.name }} · }
-              {{ emp.user.email }}
-            </span>
-            @if (emp.phone) {
-              <span class="employee-phone">{{ emp.phone }}</span>
-            }
-          </div>
-        </li>
-      }
-    </ul>
-  }
+  <div class="filter-wrap">
+    <button class="filter-btn" (click)="specDropdownOpen.set(!specDropdownOpen())" (blur)="specDropdownOpen.set(false)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
+      {{ selectedPosition() || 'All Positions' }}
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+
+    @if (specDropdownOpen()) {
+      <div class="dropdown">
+        <button class="dropdown-item" [class.active]="!selectedPosition()" (mousedown)="selectPosition('')">
+          All Positions
+        </button>
+        @for (pos of positions(); track pos) {
+          <button class="dropdown-item" [class.active]="selectedPosition() === pos" (mousedown)="selectPosition(pos)">
+            {{ pos }}
+          </button>
+        }
+      </div>
+    }
+  </div>
 </div>
+
+<!-- Count -->
+<div class="count-line">
+  {{ filtered().length }} employee{{ filtered().length !== 1 ? 's' : '' }} found
+</div>
+
+<!-- States -->
+@if (loading()) {
+  <div class="state-row">
+    <div class="spinner"></div>
+    <span>Loading...</span>
+  </div>
+} @else if (error()) {
+  <div class="state-row state-row--error">{{ error() }}</div>
+} @else if (filtered().length === 0) {
+  <div class="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+    <span>No employees found</span>
+  </div>
+} @else {
+
+  <!-- Grid -->
+  <div class="emp-grid">
+    @for (emp of filtered(); track emp.id; let i = $index) {
+      <div class="emp-card">
+
+        <!-- Card head -->
+        <div class="card-head">
+          <div class="emp-avatar" [style.background]="avatarGradient(i)">
+            {{ initials(emp) }}
+          </div>
+          <div class="emp-info">
+            <div class="emp-name">{{ emp.firstName }} {{ emp.lastName }}</div>
+            @if (emp.position?.name) {
+              <div class="emp-position">{{ emp.position!.name }}</div>
+            }
+            <div class="emp-status" [class.emp-status--inactive]="!emp.isActive">
+              <span class="status-dot"></span>
+              {{ emp.isActive ? 'Active' : 'Inactive' }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Meta -->
+        <div class="emp-meta">
+          <div class="meta-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <span>{{ emp.user.email }}</span>
+          </div>
+          @if (emp.phone) {
+            <div class="meta-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/>
+              </svg>
+              <span>{{ emp.phone }}</span>
+            </div>
+          }
+        </div>
+
+        <!-- Footer -->
+        <div class="card-foot">
+          <button class="edit-link" (click)="edit(emp)">
+            Edit profile
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+
+      </div>
+    }
+  </div>
+
+}

@@ -1,0 +1,31 @@
+.showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 40px;
+  font-family: Inter, sans-serif;
+}
+
+.showcase-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.showcase-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.showcase-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}

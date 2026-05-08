@@ -1,3 +1,53 @@
-<app-schedule-appointment />
-<app-today-appointment />
-<app-search-input />
+<div class="showcase">
+
+  <section class="showcase-section">
+    <h2 class="showcase-title">Status Badge</h2>
+    <div class="showcase-row">
+      <app-status-badge variant="success" text="Active" />
+      <app-status-badge variant="info"    text="Inactive" />
+      <app-status-badge variant="warn"    text="Pending" />
+      <app-status-badge variant="danger"  text="Cancelled" />
+    </div>
+  </section>
+
+  <section class="showcase-section">
+    <h2 class="showcase-title">Category Pill</h2>
+    <div class="showcase-row">
+      <app-category-pill icon="flask"  text="Diagnostics" />
+      <app-category-pill icon="tooth"  text="Dentistry" />
+      <app-category-pill icon="eye"    text="Ophthalmology" />
+      <app-category-pill icon="chat"   text="Consultation" />
+      <app-category-pill icon="scan"   text="Imaging" />
+      <app-category-pill icon="heart"  text="Cardiology" />
+    </div>
+  </section>
+
+  <section class="showcase-section">
+    <h2 class="showcase-title">Search Input</h2>
+    <div class="showcase-row">
+      <app-search-input />
+    </div>
+  </section>
+
+  <section class="showcase-section">
+    <h2 class="showcase-title">Data Table</h2>
+    <app-data-table
+      [columns]="tableColumns"
+      [rows]="tableRows"
+      (sortChange)="$event"
+      (editRow)="$event"
+      (deleteRow)="$event"
+    />
+  </section>
+
+  <section class="showcase-section">
+    <h2 class="showcase-title">Schedule Appointment</h2>
+    <app-schedule-appointment />
+  </section>
+
+  <section class="showcase-section">
+    <h2 class="showcase-title">Today Appointment</h2>
+    <app-today-appointment />
+  </section>
+
+</div>

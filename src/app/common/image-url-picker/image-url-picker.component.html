@@ -1,0 +1,35 @@
+<div class="section">
+  <div class="section-head">
+    <div class="section-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+    </div>
+    <span class="section-title">Photo</span>
+  </div>
+
+  <div class="picker">
+    <div class="preview">
+      @if (value()) {
+        <img [src]="value()" alt="Preview" (error)="onError()" />
+      } @else {
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/>
+          <polyline points="21 15 16 10 5 21"/>
+        </svg>
+      }
+    </div>
+
+    <app-input
+      class="picker-input"
+      label="Image URL"
+      type="url"
+      placeholder="https://example.com/image.jpg"
+      hint="Paste a direct link to an image (jpg, png, webp)"
+      [(value)]="value"
+    />
+  </div>
+</div>

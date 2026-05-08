@@ -1,52 +1,170 @@
-<div class="page-container">
-  <form class="service-form" (ngSubmit)="onSubmit()" #svcForm="ngForm">
-    <h2>{{ isEdit ? 'Редактировать услугу' : 'Создать услугу' }}</h2>
+<!-- Page header -->
+<div class="page-head">
+  <div class="page-head-left">
+    <button class="btn-back" type="button" (click)="cancel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+    </button>
+    <div>
+      <h1 class="page-title">{{ isEdit ? 'Edit service' : 'New service' }}</h1>
+      <p class="page-sub">{{ isEdit ? 'Update the service details below' : 'Fill in the details to add a service to your catalogue' }}</p>
+    </div>
+  </div>
+</div>
 
-    @if (fetchLoading()) {
-      <p class="status">Загрузка...</p>
-    } @else {
-      @if (error()) {
-        <div class="error">{{ error() }}</div>
-      }
+<!-- Fetch skeleton -->
+@if (fetchLoading()) {
+  <div class="state-row">
+    <div class="spinner"></div>
+    <span>Loading service...</span>
+  </div>
+} @else {
+  <form class="form-layout" (ngSubmit)="onSubmit()" #svcForm="ngForm">
 
-      <div class="field">
-        <label for="title">Название <span class="required">*</span></label>
-        <input id="title" type="text" name="title" [(ngModel)]="title" required placeholder="Название услуги" />
-      </div>
-
-      <div class="field">
-        <label for="description">Описание <span class="required">*</span></label>
-        <textarea id="description" name="description" [(ngModel)]="description" required placeholder="Описание услуги" rows="3"></textarea>
-      </div>
-
-      <div class="field">
-        <label for="photo">Фото (URL)</label>
-        <input id="photo" type="url" name="photo" [(ngModel)]="photo" placeholder="https://example.com/photo.jpg" />
-      </div>
-
-      <div class="row">
-        <div class="field">
-          <label for="price">Цена <span class="required">*</span></label>
-          <input id="price" type="number" name="price" [(ngModel)]="price" required min="0" step="0.01" placeholder="0.00" />
-        </div>
-
-        <div class="field">
-          <label for="duration">Длительность, мин <span class="required">*</span></label>
-          <input id="duration" type="number" name="duration" [(ngModel)]="duration" required min="1" placeholder="30" />
-        </div>
-
-        <div class="field">
-          <label for="durationMax">Макс. длительность, мин</label>
-          <input id="durationMax" type="number" name="durationMax" [(ngModel)]="durationMax" min="1" placeholder="60" />
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="button" class="btn-cancel" (click)="cancel()">Отмена</button>
-        <button type="submit" [disabled]="svcForm.invalid || loading()">
-          {{ loading() ? 'Сохранение...' : (isEdit ? 'Сохранить' : 'Создать') }}
-        </button>
+    <!-- Error banner -->
+    @if (error()) {
+      <div class="form-error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ error() }}
       </div>
     }
+
+    <div class="form-cols">
+
+      <!-- ── Left: main fields ── -->
+      <div class="form-card">
+
+        <!-- Section: Basic info -->
+        <div class="section">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <span class="section-title">Basic info</span>
+          </div>
+
+          <app-input
+            label="Title"
+            placeholder="e.g. Initial Consultation"
+            [required]="true"
+            [(value)]="title"
+          />
+
+          <app-textarea
+            label="Description"
+            placeholder="Brief description of what the service includes"
+            [required]="true"
+            [rows]="3"
+            [(value)]="description"
+          />
+        </div>
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Section: Photo -->
+        <app-image-url-picker [(value)]="photo" />
+
+        <!-- Divider -->
+        <div class="divider"></div>
+
+        <!-- Section: Pricing & Duration -->
+        <div class="section">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <span class="section-title">Pricing &amp; Duration</span>
+          </div>
+
+          <div class="fields-row">
+            <app-input
+              label="Price"
+              type="number"
+              placeholder="0.00"
+              prefix="₽"
+              [required]="true"
+              [(value)]="priceStr"
+            />
+            <app-input
+              label="Duration"
+              type="number"
+              placeholder="30"
+              suffix="min"
+              [required]="true"
+              [(value)]="durationStr"
+            />
+            <app-input
+              label="Max duration"
+              type="number"
+              placeholder="60"
+              suffix="min"
+              [(value)]="durationMaxStr"
+            />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Right: preview card ── -->
+      <div class="summary-card">
+        <div class="summary-thumb">
+          @if (photo) {
+            <img [src]="photo" alt="Preview" (error)="photo = ''" />
+          } @else {
+            <span class="summary-initial">{{ title ? title[0].toUpperCase() : '?' }}</span>
+          }
+        </div>
+
+        <div class="summary-title">{{ title || 'Service name' }}</div>
+        <div class="summary-desc">{{ description || 'Description will appear here' }}</div>
+
+        <div class="summary-meta">
+          <div class="summary-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            <span>{{ price != null ? (price | number:'1.0-2') + ' ₽' : '—' }}</span>
+          </div>
+          <div class="summary-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span>
+              @if (duration) {
+                {{ duration }}@if (durationMax) {–{{ durationMax }}} min
+              } @else {
+                —
+              }
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Form actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+      <button class="btn-submit" type="submit" [disabled]="!title || !description || !price || !duration || loading()">
+        @if (loading()) {
+          <div class="spinner-sm"></div>
+          Saving...
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ isEdit ? 'Save changes' : 'Create service' }}
+        }
+      </button>
+    </div>
+
   </form>
-</div>
+}

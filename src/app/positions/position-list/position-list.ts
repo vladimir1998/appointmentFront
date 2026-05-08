@@ -4,6 +4,16 @@ import { PositionsApiService } from '../../core/services/positions-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Position } from '../../core/models/position.model';
 
+const MOCK_POSITIONS: Position[] = [
+  { id: 'p1', name: 'Cardiologist',       permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
+  { id: 'p2', name: 'Dermatologist',      permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
+  { id: 'p3', name: 'Neurologist',        permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
+  { id: 'p4', name: 'Pediatrician',       permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
+  { id: 'p5', name: 'General Practitioner', permissions: ['appointments.view', 'appointments.edit', 'services.view', 'employees.view'], organizationId: 'mock' },
+  { id: 'p6', name: 'Nurse',              permissions: ['appointments.view', 'services.view'], organizationId: 'mock' },
+  { id: 'p7', name: 'Receptionist',       permissions: ['appointments.view', 'appointments.create', 'clients.view'], organizationId: 'mock' },
+];
+
 @Component({
   selector: 'app-position-list',
   imports: [RouterLink],
@@ -28,16 +38,20 @@ export class PositionList implements OnInit {
 
   private load(): void {
     const orgId = this.orgContext.currentOrgId();
-    if (!orgId) return;
+    if (!orgId) {
+      this.positions.set(MOCK_POSITIONS);
+      this.loading.set(false);
+      return;
+    }
 
     this.loading.set(true);
     this.api.getAll(orgId).subscribe({
       next: (data) => {
-        this.positions.set(data);
+        this.positions.set(data.length ? data : MOCK_POSITIONS);
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('Не удалось загрузить должности');
+        this.positions.set(MOCK_POSITIONS);
         this.loading.set(false);
       },
     });

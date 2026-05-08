@@ -1,12 +1,16 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { ServicesApiService } from '../../core/services/services-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
+import { InputComponent } from '../../common/input/input.component';
+import { TextareaComponent } from '../../common/textarea/textarea.component';
+import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
 
 @Component({
   selector: 'app-service-form',
-  imports: [FormsModule],
+  imports: [FormsModule, DecimalPipe, InputComponent, TextareaComponent, ImageUrlPickerComponent],
   templateUrl: './service-form.html',
   styleUrl: './service-form.scss',
 })
@@ -47,7 +51,7 @@ export class ServiceForm implements OnInit {
           this.fetchLoading.set(false);
         },
         error: () => {
-          this.error.set('Не удалось загрузить услугу');
+          this.error.set('Failed to load service');
           this.fetchLoading.set(false);
         },
       });
@@ -74,7 +78,7 @@ export class ServiceForm implements OnInit {
     request$.subscribe({
       next: () => this.router.navigate(['/services']),
       error: () => {
-        this.error.set('Не удалось сохранить услугу');
+        this.error.set('Failed to save service');
         this.loading.set(false);
       },
     });
@@ -83,4 +87,13 @@ export class ServiceForm implements OnInit {
   cancel(): void {
     this.router.navigate(['/services']);
   }
+
+  get priceStr(): string { return this.price?.toString() ?? ''; }
+  set priceStr(v: string) { this.price = v !== '' ? +v : null; }
+
+  get durationStr(): string { return this.duration?.toString() ?? ''; }
+  set durationStr(v: string) { this.duration = v !== '' ? +v : null; }
+
+  get durationMaxStr(): string { return this.durationMax?.toString() ?? ''; }
+  set durationMaxStr(v: string) { this.durationMax = v !== '' ? +v : null; }
 }

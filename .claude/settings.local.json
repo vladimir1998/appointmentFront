@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(ng generate:*)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(npx ng:*)"
     ]
   }
 }
