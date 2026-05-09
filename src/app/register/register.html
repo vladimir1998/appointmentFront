@@ -1,0 +1,129 @@
+<div class="login-grid">
+
+  <!-- Left panel -->
+  <div class="login-left">
+    <div class="login-brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
+      <div class="brand-stack">
+        <div class="brand-name">MedCRM</div>
+        <div class="brand-tag">Healthcare Management Platform</div>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h2>Join thousands of<span class="accent">healthcare professionals</span></h2>
+      <p>Create your account and start managing your practice more efficiently from day one.</p>
+      <div class="features">
+        <div class="feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Appointment scheduling & calendar sync
+        </div>
+        <div class="feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Patient & employee management
+        </div>
+        <div class="feature-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Service catalogue & billing
+        </div>
+      </div>
+    </div>
+
+    <div class="login-foot">© 2026 MedCRM. All rights reserved.</div>
+  </div>
+
+  <!-- Right panel -->
+  <div class="login-right">
+    <form class="login-form" (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <h3>Create an account</h3>
+      <div class="form-helper">Fill in your details to get started</div>
+
+      @if (error()) {
+        <div class="form-error">{{ error() }}</div>
+      }
+
+      <div class="name-row">
+        <app-input
+          label="First name"
+          placeholder="John"
+          [(value)]="firstName"
+          required
+        />
+        <app-input
+          label="Last name"
+          placeholder="Doe"
+          [(value)]="lastName"
+          required
+        />
+      </div>
+
+      <app-input
+        label="Email address"
+        placeholder="john@medcrm.com"
+        type="email"
+        [(value)]="email"
+        required
+      />
+
+      <app-input
+        label="Password"
+        placeholder="Create a password"
+        type="password"
+        [(value)]="password"
+        required
+      />
+
+      <app-input
+        label="Confirm password"
+        placeholder="Repeat your password"
+        type="password"
+        [(value)]="confirmPassword"
+        required
+      />
+
+      <div class="check-row">
+        <button
+          type="button"
+          class="checkbox"
+          [class.checked]="agreed()"
+          (click)="agreed.set(!agreed())"
+          aria-label="Agree to terms"
+        >
+          @if (agreed()) {
+            <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          }
+        </button>
+        <span class="check-label" (click)="agreed.set(!agreed())">
+          I agree to the <a href="#" class="link" (click)="$event.preventDefault()">Terms of Service</a> and <a href="#" class="link" (click)="$event.preventDefault()">Privacy Policy</a>
+        </span>
+      </div>
+
+      <button class="btn-submit" type="submit" [disabled]="registerForm.invalid || loading()">
+        {{ loading() ? 'Creating account…' : 'Create account' }}
+        @if (!loading()) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12 5 19 12 12 19"/>
+          </svg>
+        }
+      </button>
+
+      <div class="signup-line">
+        Already have an account? <a routerLink="/login" class="link">Sign in</a>
+      </div>
+    </form>
+  </div>
+
+</div>

@@ -9,12 +9,12 @@ import { TextareaComponent } from '../../common/textarea/textarea.component';
 import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
 
 @Component({
-  selector: 'app-service-form',
+  selector: 'app-admin-service-form',
   imports: [FormsModule, DecimalPipe, InputComponent, TextareaComponent, ImageUrlPickerComponent],
-  templateUrl: './service-form.html',
-  styleUrl: './service-form.scss',
+  templateUrl: './admin-service-form.html',
+  styleUrl: './admin-service-form.scss',
 })
-export class ServiceForm implements OnInit {
+export class AdminServiceForm implements OnInit {
   private readonly api = inject(ServicesApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -76,7 +76,7 @@ export class ServiceForm implements OnInit {
       : this.api.create({ ...base, organizationId: this.orgContext.currentOrgId()! });
 
     request$.subscribe({
-      next: () => this.router.navigate(['/services']),
+      next: () => this.router.navigate(['/admin/services']),
       error: () => {
         this.error.set('Failed to save service');
         this.loading.set(false);

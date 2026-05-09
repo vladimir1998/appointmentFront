@@ -62,7 +62,7 @@ export class PositionList implements OnInit {
   }
 
   edit(position: Position): void {
-    this.router.navigate(['/positions', position.id, 'edit']);
+    this.router.navigate(['/admin/positions', position.id, 'edit']);
   }
 
   openDeleteModal(position: Position): void {

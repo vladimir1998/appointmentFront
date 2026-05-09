@@ -1,0 +1,78 @@
+<div class="admin-app" [class.collapsed]="collapsed()">
+
+  <!-- ============ Sidebar ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      @if (!collapsed()) {
+        <div class="brand-name">Admin Panel</div>
+      }
+    </div>
+
+    @if (!collapsed()) {
+      <div class="nav-section">General</div>
+    }
+    <nav class="nav">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [title]="collapsed() ? 'Dashboard' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+          <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+        </svg>
+        @if (!collapsed()) { Dashboard }
+      </a>
+      <a routerLink="/admin/employees" routerLinkActive="active" [title]="collapsed() ? 'Employees' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        @if (!collapsed()) { Employees }
+      </a>
+      <a routerLink="/admin/services" routerLinkActive="active" [title]="collapsed() ? 'Services' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/>
+        </svg>
+        @if (!collapsed()) { Services }
+      </a>
+      <a routerLink="/admin/positions" routerLinkActive="active" [title]="collapsed() ? 'Positions' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        @if (!collapsed()) { Positions }
+      </a>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="collapse-btn" (click)="toggle()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" [class.rotated]="collapsed()">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        @if (!collapsed()) { <span>Collapse</span> }
+      </div>
+      <a class="back-link" routerLink="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        @if (!collapsed()) { <span>Back to app</span> }
+      </a>
+    </div>
+  </aside>
+
+  <!-- ============ Main ============ -->
+  <main class="main">
+    <div class="content">
+      <router-outlet />
+    </div>
+  </main>
+
+</div>

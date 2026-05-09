@@ -39,12 +39,12 @@ export const QUILL_MODULES = {
 };
 
 @Component({
-  selector: 'app-employee-form',
+  selector: 'app-admin-employee-form',
   imports: [FormsModule, InputComponent, TextareaComponent, ImageUrlPickerComponent, QuillModule],
-  templateUrl: './employee-form.html',
-  styleUrl: './employee-form.scss',
+  templateUrl: './admin-employee-form.html',
+  styleUrl: './admin-employee-form.scss',
 })
-export class EmployeeForm implements OnInit {
+export class AdminEmployeeForm implements OnInit {
   private readonly api = inject(EmployeesApiService);
   private readonly positionsApi = inject(PositionsApiService);
   private readonly route = inject(ActivatedRoute);

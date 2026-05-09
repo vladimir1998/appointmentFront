@@ -17,7 +17,7 @@
       <div class="nav-section">Catalog</div>
     }
     <nav class="nav">
-      <a routerLink="/catalog" routerLinkActive="active" [title]="collapsed() ? 'Services' : ''">
+      <a routerLink="/services" routerLinkActive="active" [title]="collapsed() ? 'Services' : ''">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
           <rect x="9" y="3" width="6" height="4" rx="1"/>
@@ -41,18 +41,9 @@
         </svg>
         @if (!collapsed()) { Dashboard }
       </a>
-      <a routerLink="/users" routerLinkActive="active" [title]="collapsed() ? 'Users' : ''">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-        </svg>
-        @if (!collapsed()) { Users }
-      </a>
       <a routerLink="/employees" routerLinkActive="active" [title]="collapsed() ? 'Employees' : ''">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-          <circle cx="9" cy="7" r="4"/>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
         </svg>
         @if (!collapsed()) { Employees }
       </a>
@@ -65,18 +56,19 @@
         </svg>
         @if (!collapsed()) { Appointments }
       </a>
-      <a routerLink="/services" routerLinkActive="active" [title]="collapsed() ? 'Services' : ''">
+    </nav>
+
+    @if (!collapsed()) {
+      <div class="nav-section">Admin</div>
+    }
+    <nav class="nav">
+      <a routerLink="/admin" routerLinkActive="active" [title]="collapsed() ? 'Admin Panel' : ''">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z"/>
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
         </svg>
-        @if (!collapsed()) { Services }
-      </a>
-      <a routerLink="/positions" routerLinkActive="active" [title]="collapsed() ? 'Positions' : ''">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <polyline points="12 6 12 12 16 14"/>
-        </svg>
-        @if (!collapsed()) { Positions }
+        @if (!collapsed()) { Admin Panel }
       </a>
     </nav>
 

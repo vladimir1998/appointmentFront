@@ -19,7 +19,7 @@ const AVATAR_GRADIENTS = [
   templateUrl: './user-list.html',
   styleUrl: './user-list.scss',
 })
-export class UserList {
+export class EmployeeList {
   private readonly router = inject(Router);
 
   users = signal<Employee[]>(MOCK_EMPLOYEES);
@@ -60,6 +60,6 @@ export class UserList {
   }
 
   view(user: Employee): void {
-    this.router.navigate(['/users', user.id]);
+    this.router.navigate(['/employees', user.id]);
   }
 }

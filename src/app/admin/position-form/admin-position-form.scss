@@ -1,0 +1,137 @@
+.page-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.position-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 560px;
+
+  h2 { margin: 0; }
+
+  .status { color: #6b7280; font-size: 14px; }
+
+  .error {
+    padding: 10px 12px;
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border-radius: 6px;
+    font-size: 13px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+      font-size: 14px;
+      font-weight: 500;
+      .required { color: #ef4444; }
+    }
+
+    input {
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      &:focus { border-color: #4f46e5; }
+    }
+  }
+
+  .permissions-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .permissions-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+    }
+  }
+
+  .permission-module {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+
+    .module-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background-color: #f9fafb;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+
+      input[type='checkbox'] {
+        width: 16px;
+        height: 16px;
+        accent-color: #4f46e5;
+        cursor: pointer;
+      }
+
+      .module-name { user-select: none; }
+    }
+
+    .module-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      padding: 12px 14px;
+      border-top: 1px solid #e5e7eb;
+
+      .action-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #374151;
+        cursor: pointer;
+        user-select: none;
+
+        input[type='checkbox'] {
+          width: 15px;
+          height: 15px;
+          accent-color: #4f46e5;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+
+      &[type='submit'] {
+        background-color: #4f46e5;
+        color: #fff;
+        &:disabled { opacity: 0.5; cursor: not-allowed; }
+        &:hover:not(:disabled) { background-color: #4338ca; }
+      }
+    }
+
+    .btn-cancel {
+      background-color: #f3f4f6;
+      color: #374151;
+      &:hover { background-color: #e5e7eb; }
+    }
+  }
+}

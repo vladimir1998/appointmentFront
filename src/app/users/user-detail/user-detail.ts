@@ -9,7 +9,7 @@ import { MOCK_EMPLOYEES } from '../../employees/employee-list/employee-list.mock
   templateUrl: './user-detail.html',
   styleUrl: './user-detail.scss',
 })
-export class UserDetail implements OnInit {
+export class EmployeeDetail implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly sanitizer = inject(DomSanitizer);
@@ -27,7 +27,7 @@ export class UserDetail implements OnInit {
   }
 
   back(): void {
-    this.router.navigate(['/users']);
+    this.router.navigate(['/employees']);
   }
 
   initials = computed(() => {

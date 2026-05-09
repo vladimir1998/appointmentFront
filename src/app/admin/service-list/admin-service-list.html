@@ -38,7 +38,6 @@
       <tbody>
         @for (s of services(); track s.id) {
           <tr>
-            <!-- Photo -->
             <td>
               @if (s.photo) {
                 <img class="svc-thumb" [src]="s.photo" [alt]="s.title" />
@@ -46,18 +45,8 @@
                 <div class="svc-thumb svc-thumb--placeholder">{{ s.title[0] }}</div>
               }
             </td>
-
-            <!-- Title -->
-            <td>
-              <span class="svc-title">{{ s.title }}</span>
-            </td>
-
-            <!-- Description -->
-            <td>
-              <span class="svc-desc">{{ s.description }}</span>
-            </td>
-
-            <!-- Price -->
+            <td><span class="svc-title">{{ s.title }}</span></td>
+            <td><span class="svc-desc">{{ s.description }}</span></td>
             <td>
               @if (s.price != null) {
                 <span class="svc-price">{{ s.price | number:'1.2-2' }} ₽</span>
@@ -65,8 +54,6 @@
                 <span class="svc-empty">—</span>
               }
             </td>
-
-            <!-- Duration -->
             <td>
               @if (s.duration != null) {
                 <span class="duration-badge">{{ formatDuration(s.duration, s.durationMax) }}</span>
@@ -74,8 +61,6 @@
                 <span class="svc-empty">—</span>
               }
             </td>
-
-            <!-- Actions -->
             <td>
               <div class="row-actions">
                 <button class="action-btn" title="Edit" (click)="edit(s)">

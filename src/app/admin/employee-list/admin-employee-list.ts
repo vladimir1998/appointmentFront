@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Employee } from '../../core/models/employee.model';
-import { MOCK_EMPLOYEES } from './employee-list.mock';
+import { MOCK_EMPLOYEES } from '../../employees/employee-list/employee-list.mock';
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #fcd34d, #b45309)',
@@ -16,12 +16,12 @@ const AVATAR_GRADIENTS = [
 ];
 
 @Component({
-  selector: 'app-employee-list',
+  selector: 'app-admin-employee-list',
   imports: [RouterLink],
-  templateUrl: './employee-list.html',
-  styleUrl: './employee-list.scss',
+  templateUrl: './admin-employee-list.html',
+  styleUrl: './admin-employee-list.scss',
 })
-export class EmployeeList implements OnInit {
+export class AdminEmployeeList implements OnInit {
   private readonly api = inject(EmployeesApiService);
   private readonly orgContext = inject(OrganizationContextService);
   private readonly router = inject(Router);

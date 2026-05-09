@@ -105,6 +105,6 @@ export class PositionForm implements OnInit {
   }
 
   cancel(): void {
-    this.router.navigate(['/positions']);
+    this.router.navigate(['/admin/positions']);
   }
 }
