@@ -12,6 +12,8 @@ import { PositionList } from './positions/position-list/position-list';
 import { PositionForm } from './positions/position-form/position-form';
 import { AppointmentList } from './appointments/appointment-list/appointment-list';
 import { AppointmentForm } from './appointments/appointment-form/appointment-form';
+import { UserList } from './users/user-list/user-list';
+import { UserDetail } from './users/user-detail/user-detail';
 import { Components } from './components/components';
 import { Example } from './example/example';
 import { ServiceCatalog } from './catalog/service-catalog';
@@ -31,6 +33,8 @@ export const routes: Routes = [
       { path: 'services', component: ServiceList },
       { path: 'services/create', component: ServiceForm },
       { path: 'services/:id/edit', component: ServiceForm },
+      { path: 'users', component: UserList },
+      { path: 'users/:id', component: UserDetail },
       { path: 'employees', component: EmployeeList },
       { path: 'employees/create', component: EmployeeForm },
       { path: 'employees/:id/edit', component: EmployeeForm },

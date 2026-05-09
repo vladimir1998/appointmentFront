@@ -10,6 +10,9 @@ export interface Employee {
   firstName: string;
   lastName: string;
   phone?: string;
+  photo?: string;
+  description?: string;
+  about?: string[];
   role: string;
   isActive: boolean;
   userId: string;
@@ -28,6 +31,10 @@ export interface RegisterEmployeeRequest {
   firstName: string;
   lastName: string;
   phone?: string;
+  photo?: string;
+  description?: string;
+  about?: string[];
+  isActive?: boolean;
   positionId?: string;
   organizationId: string;
 }
@@ -35,6 +42,11 @@ export interface RegisterEmployeeRequest {
 export interface UpdateEmployeeRequest {
   firstName?: string;
   lastName?: string;
+  email?: string;
   phone?: string;
+  photo?: string;
+  description?: string;
+  about?: string[];
+  isActive?: boolean;
   positionId?: string;
 }

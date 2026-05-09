@@ -1,0 +1,76 @@
+@if (user()) {
+  <div class="detail-page">
+
+    <!-- Header -->
+    <div class="page-head">
+      <button class="btn-back" type="button" (click)="back()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+      </button>
+      <div>
+        <h1 class="page-title">{{ user()!.firstName }} {{ user()!.lastName }}</h1>
+        <p class="page-sub">User profile</p>
+      </div>
+    </div>
+
+    <div class="detail-layout">
+
+      <!-- Left: avatar + meta -->
+      <div class="profile-card">
+        @if (user()!.photo) {
+          <div class="avatar avatar--photo">
+            <img [src]="user()!.photo" [alt]="user()!.firstName" />
+          </div>
+        } @else {
+          <div class="avatar">{{ initials() }}</div>
+        }
+
+        <div class="profile-name">{{ user()!.firstName }} {{ user()!.lastName }}</div>
+
+        <div class="profile-status" [class.profile-status--inactive]="!user()!.isActive">
+          <span class="status-dot"></span>
+          {{ user()!.isActive ? 'Active' : 'Inactive' }}
+        </div>
+
+        <div class="profile-meta">
+          <div class="meta-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+            </svg>
+            <span>{{ user()!.user.email }}</span>
+          </div>
+          @if (user()!.phone) {
+            <div class="meta-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/>
+              </svg>
+              <span>{{ user()!.phone }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Right: about blocks -->
+      @if (safeAbout().length) {
+        <div class="info-blocks">
+          @for (block of safeAbout(); track $index) {
+            <div class="info-card">
+              <div class="info-body" [innerHTML]="block"></div>
+            </div>
+          }
+        </div>
+      } @else if (user()!.description) {
+        <div class="info-blocks">
+          <div class="info-card">
+            <p class="info-text">{{ user()!.description }}</p>
+          </div>
+        </div>
+      }
+
+    </div>
+
+  </div>
+} @else {
+  <div class="not-found">User not found</div>
+}

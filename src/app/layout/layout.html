@@ -41,6 +41,12 @@
         </svg>
         @if (!collapsed()) { Dashboard }
       </a>
+      <a routerLink="/users" routerLinkActive="active" [title]="collapsed() ? 'Users' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+        </svg>
+        @if (!collapsed()) { Users }
+      </a>
       <a routerLink="/employees" routerLinkActive="active" [title]="collapsed() ? 'Employees' : ''">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>

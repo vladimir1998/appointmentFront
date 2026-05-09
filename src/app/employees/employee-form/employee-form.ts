@@ -1,11 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { QuillModule } from 'ngx-quill';
 import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { PositionsApiService } from '../../core/services/positions-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Position } from '../../core/models/position.model';
 import { InputComponent } from '../../common/input/input.component';
+import { TextareaComponent } from '../../common/textarea/textarea.component';
+import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #fcd34d, #b45309)',
@@ -18,18 +21,26 @@ const AVATAR_GRADIENTS = [
 ];
 
 const MOCK_POSITIONS: Position[] = [
-  { id: 'p1', name: 'Cardiologist',        permissions: [], organizationId: 'mock' },
-  { id: 'p2', name: 'Dermatologist',       permissions: [], organizationId: 'mock' },
-  { id: 'p3', name: 'Neurologist',         permissions: [], organizationId: 'mock' },
-  { id: 'p4', name: 'Pediatrician',        permissions: [], organizationId: 'mock' },
-  { id: 'p5', name: 'General Practitioner',permissions: [], organizationId: 'mock' },
-  { id: 'p6', name: 'Nurse',               permissions: [], organizationId: 'mock' },
-  { id: 'p7', name: 'Receptionist',        permissions: [], organizationId: 'mock' },
+  { id: 'p1', name: 'Cardiologist',         permissions: [], organizationId: 'mock' },
+  { id: 'p2', name: 'Dermatologist',        permissions: [], organizationId: 'mock' },
+  { id: 'p3', name: 'Neurologist',          permissions: [], organizationId: 'mock' },
+  { id: 'p4', name: 'Pediatrician',         permissions: [], organizationId: 'mock' },
+  { id: 'p5', name: 'General Practitioner', permissions: [], organizationId: 'mock' },
+  { id: 'p6', name: 'Nurse',                permissions: [], organizationId: 'mock' },
+  { id: 'p7', name: 'Receptionist',         permissions: [], organizationId: 'mock' },
 ];
+
+export const QUILL_MODULES = {
+  toolbar: [
+    ['bold', 'italic', 'underline'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['clean'],
+  ],
+};
 
 @Component({
   selector: 'app-employee-form',
-  imports: [FormsModule, InputComponent],
+  imports: [FormsModule, InputComponent, TextareaComponent, ImageUrlPickerComponent, QuillModule],
   templateUrl: './employee-form.html',
   styleUrl: './employee-form.scss',
 })
@@ -43,12 +54,17 @@ export class EmployeeForm implements OnInit {
   isEdit = false;
   employeeId: string | null = null;
 
-  email = '';
-  password = '';
   firstName = '';
   lastName = '';
+  email = '';
   phone = '';
+  photo = '';
+  description = '';
+  about: string[] = [''];
+  isActive = true;
   positionId = '';
+
+  readonly quillModules = QUILL_MODULES;
 
   positions = signal<Position[]>([]);
   positionsLoading = signal(false);
@@ -86,6 +102,10 @@ export class EmployeeForm implements OnInit {
           this.lastName = emp.lastName;
           this.email = emp.user.email;
           this.phone = emp.phone ?? '';
+          this.photo = emp.photo ?? '';
+          this.description = emp.description ?? '';
+          this.about = emp.about?.length ? [...emp.about] : [''];
+          this.isActive = emp.isActive;
           this.positionId = emp.positionId ?? '';
           this.fetchLoading.set(false);
         },
@@ -97,23 +117,46 @@ export class EmployeeForm implements OnInit {
     }
   }
 
+  addAboutBlock(): void {
+    this.about = [...this.about, ''];
+  }
+
+  removeAboutBlock(index: number): void {
+    this.about = this.about.filter((_, i) => i !== index);
+  }
+
+  updateAboutBlock(index: number, value: string): void {
+    this.about = this.about.map((item, i) => i === index ? value : item);
+  }
+
   onSubmit(): void {
     this.error.set(null);
     this.loading.set(true);
+
+    const about = this.about.filter(b => b.trim());
 
     const request$ = this.isEdit
       ? this.api.update(this.employeeId!, {
           firstName: this.firstName,
           lastName: this.lastName,
+          ...(this.email && { email: this.email }),
           ...(this.phone && { phone: this.phone }),
+          ...(this.photo && { photo: this.photo }),
+          ...(this.description && { description: this.description }),
+          ...(about.length && { about }),
+          isActive: this.isActive,
           ...(this.positionId && { positionId: this.positionId }),
         })
       : this.api.register({
           email: this.email,
-          password: this.password,
+          password: '',
           firstName: this.firstName,
           lastName: this.lastName,
           ...(this.phone && { phone: this.phone }),
+          ...(this.photo && { photo: this.photo }),
+          ...(this.description && { description: this.description }),
+          ...(about.length && { about }),
+          isActive: this.isActive,
           ...(this.positionId && { positionId: this.positionId }),
           organizationId: this.orgContext.currentOrgId()!,
         });
