@@ -15,6 +15,9 @@ import { AppointmentList } from './appointments/appointment-list/appointment-lis
 import { AppointmentForm } from './appointments/appointment-form/appointment-form';
 import { EmployeeList } from './users/user-list/user-list';
 import { EmployeeDetail } from './users/user-detail/user-detail';
+import { AdminInvite } from './admin/invite/admin-invite';
+import { AdminUserList } from './admin/user-list/admin-user-list';
+import { AdminInviteList } from './admin/invite-list/admin-invite-list';
 import { AdminLayout } from './admin/admin-layout/admin-layout';
 import { AdminDashboard } from './admin/admin-dashboard/admin-dashboard';
 import { Components } from './components/components';
@@ -29,6 +32,9 @@ export const routes: Routes = [
     component: AdminLayout,
     children: [
       { path: '', component: AdminDashboard },
+      { path: 'invite', component: AdminInvite },
+      { path: 'invites', component: AdminInviteList },
+      { path: 'users', component: AdminUserList },
       { path: 'employees', component: AdminEmployeeList },
       { path: 'employees/create', component: AdminEmployeeForm },
       { path: 'employees/:id/edit', component: AdminEmployeeForm },

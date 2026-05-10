@@ -20,6 +20,7 @@
   color: var(--text-muted);
 }
 
+/* ── Primary button ──────────────────────────── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -77,65 +78,13 @@
   color: var(--text);
   outline: none;
   transition: border-color .15s, box-shadow .15s;
+  box-sizing: border-box;
 
   &::placeholder { color: var(--text-subtle); }
   &:focus {
     border-color: var(--teal-500);
     box-shadow: 0 0 0 3px rgba(20, 184, 166, .12);
   }
-}
-
-.filter-wrap {
-  position: relative;
-}
-
-.filter-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  height: 40px;
-  padding: 0 14px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  font: inherit;
-  font-size: 13.5px;
-  color: var(--text);
-  cursor: pointer;
-  white-space: nowrap;
-
-  &:hover { border-color: var(--border-strong); }
-  svg:first-child { width: 13px; height: 13px; color: var(--text-muted); }
-  .chev { width: 12px; height: 12px; color: var(--text-muted); }
-}
-
-.dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
-  min-width: 180px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(15, 23, 42, .1);
-  z-index: 50;
-  overflow: hidden;
-}
-
-.dropdown-item {
-  display: block;
-  width: 100%;
-  padding: 9px 14px;
-  text-align: left;
-  font: inherit;
-  font-size: 13.5px;
-  color: var(--text);
-  background: transparent;
-  border: 0;
-  cursor: pointer;
-
-  &:hover { background: #F1F5F9; }
-  &.active { color: var(--teal-600); font-weight: 600; background: var(--teal-50); }
 }
 
 /* ── Table card ──────────────────────────────── */
@@ -178,13 +127,13 @@
 
   td {
     padding: 12px 16px;
-    vertical-align: middle;
+    vertical-align: top;
     color: var(--text);
   }
 }
 
 /* ── Avatar ──────────────────────────────────── */
-.emp-avatar {
+.user-avatar {
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -194,135 +143,121 @@
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.02em;
+  flex-shrink: 0;
 }
 
-/* ── Cells ───────────────────────────────────── */
-.emp-name {
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-}
-
-.emp-desc {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  max-width: 260px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.emp-contacts {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 3px;
-  font-size: 12px;
-  color: var(--text-subtle);
-}
-
-.position-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: var(--teal-50);
-  color: var(--teal-600);
-  font-size: 12.5px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.cell-muted {
-  color: var(--text-muted);
-  font-size: 13px;
-}
-
-/* ── User account cell ───────────────────────── */
-.user-account {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
+/* ── User cell ───────────────────────────────── */
 .user-name {
-  font-size: 13.5px;
-  color: var(--text);
   font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
 }
 
 .user-email {
   font-size: 12.5px;
   color: var(--text-muted);
+  margin-top: 2px;
 }
 
-.user-meta {
+.user-bio {
+  font-size: 12px;
+  color: var(--text-subtle);
+  margin-top: 2px;
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Muted cell ──────────────────────────────── */
+.cell-muted {
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* ── Employee chips ──────────────────────────── */
+.emp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.emp-chip {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 12px;
-  color: var(--text-muted);
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 10px;
+  background: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  min-width: 220px;
 }
 
-.meta-sep {
-  color: var(--border-strong);
+.emp-chip-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.empty {
-  color: var(--text-subtle);
-}
-
-/* ── Status badge ────────────────────────────── */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--color-success);
+.emp-chip-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
   white-space: nowrap;
-
-  .status-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: currentColor;
-    flex-shrink: 0;
-  }
-
-  &--inactive { color: var(--text-subtle); }
 }
 
-/* ── Visibility badge ────────────────────────── */
-.visibility-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12.5px;
-  font-weight: 500;
+.emp-chip-pos {
+  font-size: 11.5px;
   color: var(--teal-600);
-  white-space: nowrap;
+  font-weight: 500;
+}
 
-  svg { width: 13px; height: 13px; flex-shrink: 0; }
+.emp-chip-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Status dot ──────────────────────────────── */
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-success);
+  flex-shrink: 0;
+
+  &--inactive { background: var(--text-subtle); }
+}
+
+/* ── Visibility icon ─────────────────────────── */
+.visibility-icon {
+  color: var(--teal-500);
+  display: flex;
+  align-items: center;
+
+  svg { width: 13px; height: 13px; }
 
   &--private { color: var(--text-subtle); }
 }
 
-/* ── Action button ───────────────────────────── */
-.action-btn {
-  width: 32px;
-  height: 32px;
+/* ── Employee edit link ──────────────────────── */
+.emp-edit-btn {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
   color: var(--text-muted);
+  text-decoration: none;
   transition: border-color .12s, background .12s, color .12s;
 
-  svg { width: 14px; height: 14px; }
+  svg { width: 13px; height: 13px; }
 
   &:hover {
     border-color: var(--teal-500);
@@ -331,16 +266,44 @@
   }
 }
 
-/* ── Footer ──────────────────────────────────── */
-.table-footer {
-  padding: 10px 16px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-subtle);
-  background: #F8FAFC;
+/* ── Create employee button ──────────────────── */
+.btn-create-emp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color .12s, background .12s, color .12s;
+
+  svg { width: 12px; height: 12px; }
+
+  &:hover {
+    border-color: var(--teal-500);
+    background: var(--teal-50);
+    color: var(--teal-600);
+  }
 }
 
-/* ── States ──────────────────────────────────── */
+/* ── Empty / states ──────────────────────────── */
+.empty {
+  color: var(--text-subtle);
+  font-size: 13px;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-subtle);
+}
+
 .state-row {
   display: flex;
   align-items: center;
@@ -350,12 +313,6 @@
   font-size: 13.5px;
 
   &--error { color: var(--danger); }
-}
-
-.empty-cell {
-  text-align: center;
-  padding: 40px;
-  color: var(--text-subtle);
 }
 
 .spinner {
@@ -368,3 +325,12 @@
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Footer ──────────────────────────────────── */
+.table-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-subtle);
+  background: #F8FAFC;
+}

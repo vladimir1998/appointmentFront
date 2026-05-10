@@ -1,0 +1,227 @@
+/* ── Page header ─────────────────────────────── */
+.page-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.page-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 16px;
+  background: var(--teal-500);
+  color: #fff;
+  border: 0;
+  border-radius: var(--radius);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover { background: var(--teal-600); }
+  svg { width: 14px; height: 14px; }
+}
+
+/* ── Filter tabs ─────────────────────────────── */
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color .15s, border-color .15s;
+
+  &:hover { color: var(--text); }
+
+  &--active {
+    color: var(--teal-600);
+    border-bottom-color: var(--teal-500);
+    font-weight: 600;
+  }
+}
+
+.tab-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--pending  { background: #F59E0B; }
+  &--accepted { background: var(--color-success); }
+}
+
+.tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  background: #F1F5F9;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+
+  .tab--active & {
+    background: var(--teal-50);
+    color: var(--teal-600);
+  }
+}
+
+/* ── Table card ──────────────────────────────── */
+.table-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+
+  thead tr {
+    border-bottom: 1px solid var(--border);
+    background: #F8FAFC;
+  }
+
+  th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #F1F5F9;
+    transition: background .1s;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: #F8FAFC; }
+  }
+
+  td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    color: var(--text);
+  }
+}
+
+/* ── Row highlights ──────────────────────────── */
+.row--accepted {
+  td:first-child { border-left: 3px solid var(--color-success); }
+}
+
+.row--pending {
+  td:first-child { border-left: 3px solid #F59E0B; }
+}
+
+/* ── Cells ───────────────────────────────────── */
+.cell-email {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.cell-date {
+  color: var(--text-muted);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.cell-time {
+  font-size: 12px;
+  color: var(--text-subtle);
+  margin-top: 2px;
+}
+
+.cell-empty {
+  color: var(--text-subtle);
+}
+
+/* ── Role badge ──────────────────────────────── */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &--employee { background: #EFF6FF; color: #1D4ED8; }
+  &--manager  { background: #FEF9C3; color: #92400E; }
+  &--admin    { background: #FDF2F8; color: #9D174D; }
+}
+
+/* ── Status badge ────────────────────────────── */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+
+  svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+  &--accepted { color: var(--color-success); }
+  &--pending  { color: #B45309; }
+}
+
+/* ── Empty / footer ──────────────────────────── */
+.empty-cell {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-subtle);
+}
+
+.table-footer {
+  padding: 10px 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-subtle);
+  background: #F8FAFC;
+}

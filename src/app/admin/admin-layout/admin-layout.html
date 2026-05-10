@@ -19,6 +19,22 @@
       <div class="nav-section">General</div>
     }
     <nav class="nav">
+      <a routerLink="/admin/invites" routerLinkActive="active" [title]="collapsed() ? 'Invites' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        @if (!collapsed()) { Invites }
+      </a>
+      <a routerLink="/admin/invite" routerLinkActive="active" [title]="collapsed() ? 'Invite user' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <line x1="19" y1="8" x2="19" y2="14"/>
+          <line x1="22" y1="11" x2="16" y2="11"/>
+        </svg>
+        @if (!collapsed()) { Invite user }
+      </a>
       <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [title]="collapsed() ? 'Dashboard' : ''">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="3" width="7" height="7" rx="1.5"/>
@@ -27,6 +43,13 @@
           <rect x="14" y="14" width="7" height="7" rx="1.5"/>
         </svg>
         @if (!collapsed()) { Dashboard }
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="active" [title]="collapsed() ? 'Users' : ''">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        @if (!collapsed()) { Users }
       </a>
       <a routerLink="/admin/employees" routerLinkActive="active" [title]="collapsed() ? 'Employees' : ''">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">

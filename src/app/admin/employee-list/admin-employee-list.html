@@ -52,86 +52,114 @@
   </div>
 </div>
 
-<!-- Count -->
-<div class="count-line">
-  {{ filtered().length }} employee{{ filtered().length !== 1 ? 's' : '' }} found
-</div>
+<!-- Table card -->
+<div class="table-card">
 
-<!-- States -->
-@if (loading()) {
-  <div class="state-row">
-    <div class="spinner"></div>
-    <span>Loading...</span>
-  </div>
-} @else if (error()) {
-  <div class="state-row state-row--error">{{ error() }}</div>
-} @else if (filtered().length === 0) {
-  <div class="empty-state">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-    </svg>
-    <span>No employees found</span>
-  </div>
-} @else {
+  @if (loading()) {
+    <div class="state-row">
+      <div class="spinner"></div>
+      <span>Loading...</span>
+    </div>
+  } @else if (error()) {
+    <div class="state-row state-row--error">{{ error() }}</div>
+  } @else {
 
-  <!-- Grid -->
-  <div class="emp-grid">
-    @for (emp of filtered(); track emp.id; let i = $index) {
-      <div class="emp-card">
-
-        <!-- Card head -->
-        <div class="card-head">
-          <div class="emp-avatar" [style.background]="avatarGradient(i)">
-            {{ initials(emp) }}
-          </div>
-          <div class="emp-info">
-            <div class="emp-name">{{ emp.firstName }} {{ emp.lastName }}</div>
-            @if (emp.position?.name) {
-              <div class="emp-position">{{ emp.position!.name }}</div>
-            }
-            <div class="emp-status" [class.emp-status--inactive]="!emp.isActive">
-              <span class="status-dot"></span>
-              {{ emp.isActive ? 'Active' : 'Inactive' }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Description -->
-        @if (emp.description) {
-          <p class="emp-description">{{ emp.description }}</p>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th style="width: 48px"></th>
+          <th>Employee</th>
+          <th>Position</th>
+          <th>User account</th>
+          <th>Status</th>
+          <th>Visibility</th>
+          <th style="width: 72px"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (emp of filtered(); track emp.id; let i = $index) {
+          <tr>
+            <td>
+              <div class="emp-avatar" [style.background]="avatarGradient(i)">
+                {{ initials(emp) }}
+              </div>
+            </td>
+            <td>
+              <div class="emp-name">{{ emp.firstName }} {{ emp.lastName }}</div>
+              @if (emp.description) {
+                <div class="emp-desc">{{ emp.description }}</div>
+              }
+              <div class="emp-contacts">
+                <span>{{ emp.user.email }}</span>
+                @if (emp.phone) {
+                  <span class="meta-sep">·</span>
+                  <span>{{ emp.phone }}</span>
+                }
+              </div>
+            </td>
+            <td>
+              @if (emp.position?.name) {
+                <span class="position-badge">{{ emp.position!.name }}</span>
+              } @else {
+                <span class="empty">—</span>
+              }
+            </td>
+            <td>
+              <div class="user-account">
+                @if (emp.user.firstName || emp.user.lastName) {
+                  <div class="user-name">{{ emp.user.firstName }} {{ emp.user.lastName }}</div>
+                }
+                <div class="user-email">{{ emp.user.email }}</div>
+                <div class="user-meta">
+                  @if (emp.user.phone) {
+                    <span>{{ emp.user.phone }}</span>
+                    <span class="meta-sep">·</span>
+                  }
+                  <span>Joined {{ formatDate(emp.user.createdAt) }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="status-badge" [class.status-badge--inactive]="!emp.isActive">
+                <span class="status-dot"></span>
+                {{ emp.isActive ? 'Active' : 'Inactive' }}
+              </div>
+            </td>
+            <td>
+              <div class="visibility-badge" [class.visibility-badge--private]="!emp.isPublic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  @if (emp.isPublic) {
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  } @else {
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  }
+                </svg>
+                {{ emp.isPublic ? 'Public' : 'Private' }}
+              </div>
+            </td>
+            <td>
+              <button class="action-btn" title="Edit" (click)="edit(emp)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" class="empty-cell">No employees found</td>
+          </tr>
         }
+      </tbody>
+    </table>
 
-        <!-- Meta -->
-        <div class="emp-meta">
-          <div class="meta-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-            </svg>
-            <span>{{ emp.user.email }}</span>
-          </div>
-          @if (emp.phone) {
-            <div class="meta-row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/>
-              </svg>
-              <span>{{ emp.phone }}</span>
-            </div>
-          }
-        </div>
+    <div class="table-footer">
+      {{ filtered().length }} employee{{ filtered().length !== 1 ? 's' : '' }}
+    </div>
 
-        <!-- Footer -->
-        <div class="card-foot">
-          <button class="edit-link" (click)="edit(emp)">
-            Edit profile
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </button>
-        </div>
+  }
 
-      </div>
-    }
-  </div>
-
-}
+</div>

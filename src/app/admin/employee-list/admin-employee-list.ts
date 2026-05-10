@@ -87,4 +87,9 @@ export class AdminEmployeeList implements OnInit {
   edit(emp: Employee): void {
     this.router.navigate(['/admin/employees', emp.id, 'edit']);
   }
+
+  formatDate(iso: string | undefined): string {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
 }

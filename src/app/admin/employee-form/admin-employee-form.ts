@@ -1,11 +1,14 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
 import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { PositionsApiService } from '../../core/services/positions-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Position } from '../../core/models/position.model';
+import { User } from '../../core/models/user.model';
+import { MOCK_EMPLOYEES } from '../../employees/employee-list/employee-list.mock';
+import { MOCK_USERS } from '../../users/user.mock';
 import { InputComponent } from '../../common/input/input.component';
 import { TextareaComponent } from '../../common/textarea/textarea.component';
 import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
@@ -40,7 +43,7 @@ export const QUILL_MODULES = {
 
 @Component({
   selector: 'app-admin-employee-form',
-  imports: [FormsModule, InputComponent, TextareaComponent, ImageUrlPickerComponent, QuillModule],
+  imports: [FormsModule, RouterLink, InputComponent, TextareaComponent, ImageUrlPickerComponent, QuillModule],
   templateUrl: './admin-employee-form.html',
   styleUrl: './admin-employee-form.scss',
 })
@@ -53,6 +56,7 @@ export class AdminEmployeeForm implements OnInit {
 
   isEdit = false;
   employeeId: string | null = null;
+  linkedUser: User | null = null;
 
   firstName = '';
   lastName = '';
@@ -62,6 +66,7 @@ export class AdminEmployeeForm implements OnInit {
   description = '';
   about: string[] = [''];
   isActive = true;
+  isPublic = false;
   positionId = '';
 
   readonly quillModules = QUILL_MODULES;
@@ -71,6 +76,19 @@ export class AdminEmployeeForm implements OnInit {
   fetchLoading = signal(false);
   loading = signal(false);
   error = signal<string | null>(null);
+
+  users = signal<User[]>([]);
+  userSearch = signal('');
+  userDropdownOpen = signal(false);
+
+  filteredUsers = computed(() => {
+    const q = this.userSearch().toLowerCase();
+    if (!q) return this.users();
+    return this.users().filter(u =>
+      u.email.toLowerCase().includes(q) ||
+      `${u.firstName ?? ''} ${u.lastName ?? ''}`.toLowerCase().includes(q)
+    );
+  });
 
   ngOnInit(): void {
     this.employeeId = this.route.snapshot.paramMap.get('id');
@@ -94,27 +112,58 @@ export class AdminEmployeeForm implements OnInit {
       this.positions.set(MOCK_POSITIONS);
     }
 
+    this.users.set(MOCK_USERS);
+
+    const preselectedUserId = this.route.snapshot.queryParamMap.get('userId');
+    if (preselectedUserId) {
+      const user = MOCK_USERS.find(u => u.id === preselectedUserId);
+      if (user) this.selectUser(user);
+    }
+
     if (this.isEdit && this.employeeId) {
       this.fetchLoading.set(true);
       this.api.getById(this.employeeId).subscribe({
         next: (emp) => {
-          this.firstName = emp.firstName;
-          this.lastName = emp.lastName;
-          this.email = emp.user.email;
-          this.phone = emp.phone ?? '';
-          this.photo = emp.photo ?? '';
-          this.description = emp.description ?? '';
-          this.about = emp.about?.length ? [...emp.about] : [''];
-          this.isActive = emp.isActive;
-          this.positionId = emp.positionId ?? '';
+          this.fillForm(emp);
           this.fetchLoading.set(false);
         },
         error: () => {
-          this.error.set('Failed to load employee');
+          const mock = MOCK_EMPLOYEES.find(e => e.id === this.employeeId);
+          if (mock) {
+            this.fillForm(mock);
+          } else {
+            this.error.set('Employee not found');
+          }
           this.fetchLoading.set(false);
         },
       });
     }
+  }
+
+  selectUser(user: User): void {
+    this.linkedUser = user;
+    this.email = user.email;
+    this.userSearch.set('');
+    this.userDropdownOpen.set(false);
+  }
+
+  clearUser(): void {
+    this.linkedUser = null;
+    this.email = '';
+  }
+
+  private fillForm(emp: import('../../core/models/employee.model').Employee): void {
+    this.firstName = emp.firstName;
+    this.lastName = emp.lastName;
+    this.email = emp.user.email;
+    this.phone = emp.phone ?? '';
+    this.photo = emp.photo ?? '';
+    this.description = emp.description ?? '';
+    this.about = emp.about?.length ? [...emp.about] : [''];
+    this.isActive = emp.isActive;
+    this.isPublic = emp.isPublic ?? false;
+    this.positionId = emp.positionId ?? '';
+    this.linkedUser = emp.user;
   }
 
   addAboutBlock(): void {
@@ -145,6 +194,7 @@ export class AdminEmployeeForm implements OnInit {
           ...(this.description && { description: this.description }),
           ...(about.length && { about }),
           isActive: this.isActive,
+          isPublic: this.isPublic,
           ...(this.positionId && { positionId: this.positionId }),
         })
       : this.api.register({
@@ -157,6 +207,7 @@ export class AdminEmployeeForm implements OnInit {
           ...(this.description && { description: this.description }),
           ...(about.length && { about }),
           isActive: this.isActive,
+          isPublic: this.isPublic,
           ...(this.positionId && { positionId: this.positionId }),
           organizationId: this.orgContext.currentOrgId()!,
         });
@@ -187,5 +238,10 @@ export class AdminEmployeeForm implements OnInit {
 
   get selectedPositionName(): string {
     return this.positions().find(p => p.id === this.positionId)?.name ?? '';
+  }
+
+  formatDate(iso: string | undefined): string {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
   }
 }

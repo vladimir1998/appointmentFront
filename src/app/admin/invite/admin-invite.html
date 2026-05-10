@@ -1,0 +1,117 @@
+<div class="page-head">
+  <div class="page-head-left">
+    <button class="btn-back" type="button" (click)="cancel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+    </button>
+    <div>
+      <h1 class="page-title">Invite user</h1>
+      <p class="page-sub">Send an invitation link to a new team member</p>
+    </div>
+  </div>
+</div>
+
+<div class="invite-layout">
+
+  <!-- Form card -->
+  <div class="form-card">
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <span class="section-title">Invitation details</span>
+      </div>
+
+      @if (error()) {
+        <div class="alert alert--error">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ error() }}
+        </div>
+      }
+
+      @if (success()) {
+        <div class="alert alert--success">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ success() }}
+        </div>
+      }
+
+      <form (ngSubmit)="onSubmit()" #inviteForm="ngForm">
+        <div class="fields">
+          <app-input
+            label="Email address"
+            placeholder="colleague@medcrm.com"
+            type="email"
+            [required]="true"
+            [(value)]="email"
+          />
+
+          <div class="field">
+            <label class="field-label">Role</label>
+            <div class="select-wrap">
+              <select class="select" name="role" [(ngModel)]="role">
+                <option value="EMPLOYEE">Employee</option>
+                <option value="ADMIN">Admin</option>
+                <option value="MANAGER">Manager</option>
+              </select>
+              <svg class="select-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+          <button
+            class="btn-submit"
+            type="submit"
+            [disabled]="inviteForm.invalid || loading()"
+          >
+            @if (loading()) {
+              <div class="spinner-sm"></div>
+              Sending...
+            } @else {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"/>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+              </svg>
+              Send invitation
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Info card -->
+  <div class="info-card">
+    <div class="info-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    </div>
+    <h3 class="info-title">How it works</h3>
+    <ul class="info-list">
+      <li>Enter the email address of the person you want to invite</li>
+      <li>They will receive an email with a registration link</li>
+      <li>After signing up they will be added to your organization</li>
+      <li>You can assign their position later from the Employees page</li>
+    </ul>
+  </div>
+
+</div>

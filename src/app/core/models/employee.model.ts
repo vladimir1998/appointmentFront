@@ -1,9 +1,5 @@
 import { Position } from './position.model';
-
-export interface EmployeeUser {
-  id: string;
-  email: string;
-}
+import { User } from './user.model';
 
 export interface Employee {
   id: string;
@@ -15,14 +11,17 @@ export interface Employee {
   about?: string[];
   role: string;
   isActive: boolean;
-  userId: string;
-  organizationId: string;
-  positionId?: string;
+  isPublic?: boolean;
   createdAt: string;
   updatedAt: string;
   deletedAt: string | null;
-  user: EmployeeUser;
+  services?: any;
+  organizationId: string;
+  organization?: any;
+  positionId?: string;
   position?: Position;
+  userId: string;
+  user: User;
 }
 
 export interface RegisterEmployeeRequest {
@@ -35,6 +34,7 @@ export interface RegisterEmployeeRequest {
   description?: string;
   about?: string[];
   isActive?: boolean;
+  isPublic?: boolean;
   positionId?: string;
   organizationId: string;
 }
@@ -48,5 +48,6 @@ export interface UpdateEmployeeRequest {
   description?: string;
   about?: string[];
   isActive?: boolean;
+  isPublic?: boolean;
   positionId?: string;
 }
