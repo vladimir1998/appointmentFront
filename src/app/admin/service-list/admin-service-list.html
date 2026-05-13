@@ -32,6 +32,7 @@
           <th>Description</th>
           <th>Price</th>
           <th>Duration</th>
+          <th>Employees</th>
           <th style="width: 88px"></th>
         </tr>
       </thead>
@@ -62,6 +63,26 @@
               }
             </td>
             <td>
+              @let emps = employeesFor(s);
+              @if (emps.length) {
+                <div class="emp-list">
+                  @for (emp of emps; track emp.id) {
+                    <div class="emp-row">
+                      <div class="emp-avatar-sm">{{ initials(emp.firstName, emp.lastName) }}</div>
+                      <div class="emp-info">
+                        <span class="emp-name">{{ emp.firstName }} {{ emp.lastName }}</span>
+                        @if (emp.position?.name) {
+                          <span class="emp-pos">{{ emp.position!.name }}</span>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <span class="svc-empty">—</span>
+              }
+            </td>
+            <td>
               <div class="row-actions">
                 <button class="action-btn" title="Edit" (click)="edit(s)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -82,7 +103,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="6" class="empty-cell">No services found</td>
+            <td colspan="7" class="empty-cell">No services found</td>
           </tr>
         }
       </tbody>

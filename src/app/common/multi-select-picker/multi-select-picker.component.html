@@ -1,0 +1,59 @@
+@if (selected().length) {
+  <div class="tags">
+    @for (item of selected(); track item.id) {
+      <span class="tag">
+        {{ item.label }}
+        <button type="button" class="tag-remove" (click)="remove(item)" title="Remove">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </span>
+    }
+  </div>
+}
+
+<div class="picker">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      class="search-input"
+      [placeholder]="placeholder()"
+      [value]="search()"
+      (input)="search.set($any($event.target).value); open.set(true)"
+      (focus)="open.set(true)"
+      (blur)="open.set(false)"
+    />
+  </div>
+
+  @if (open()) {
+    <div class="dropdown">
+      @for (item of filtered(); track item.id) {
+        <button
+          type="button"
+          class="option"
+          [class.option--selected]="isSelected(item)"
+          (mousedown)="$event.preventDefault(); toggle(item)"
+        >
+          <div class="option-check">
+            @if (isSelected(item)) {
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            }
+          </div>
+          <div>
+            <div class="option-label">{{ item.label }}</div>
+            @if (item.sublabel) {
+              <div class="option-sublabel">{{ item.sublabel }}</div>
+            }
+          </div>
+        </button>
+      } @empty {
+        <div class="option-empty">No items found</div>
+      }
+    </div>
+  }
+</div>

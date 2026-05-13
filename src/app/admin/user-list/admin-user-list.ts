@@ -3,7 +3,7 @@ import { RouterLink } from '@angular/router';
 import { User } from '../../core/models/user.model';
 import { Employee } from '../../core/models/employee.model';
 import { MOCK_USERS } from '../../users/user.mock';
-import { MOCK_EMPLOYEES } from '../../employees/employee-list/employee-list.mock';
+import { MOCK_EMPLOYEES } from '../../core/mocks/mock-employees';
 
 export interface UserWithEmployee {
   user: User;

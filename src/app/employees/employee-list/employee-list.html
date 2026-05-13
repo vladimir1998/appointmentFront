@@ -20,33 +20,28 @@
     </svg>
     <input
       class="search-input"
-      placeholder="Search by name or position..."
+      placeholder="Search by name or email..."
       [value]="searchQuery()"
       (input)="searchQuery.set($any($event.target).value)"
     />
   </div>
 
   <div class="filter-wrap">
-    <button class="filter-btn" (click)="specDropdownOpen.set(!specDropdownOpen())" (blur)="specDropdownOpen.set(false)">
+    <button class="filter-btn" (click)="filterDropdownOpen.set(!filterDropdownOpen())" (blur)="filterDropdownOpen.set(false)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
       </svg>
-      {{ selectedPosition() || 'All Positions' }}
+      {{ filterLabel() }}
       <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="6 9 12 15 18 9"/>
       </svg>
     </button>
 
-    @if (specDropdownOpen()) {
+    @if (filterDropdownOpen()) {
       <div class="dropdown">
-        <button class="dropdown-item" [class.active]="!selectedPosition()" (mousedown)="selectPosition('')">
-          All Positions
-        </button>
-        @for (pos of positions(); track pos) {
-          <button class="dropdown-item" [class.active]="selectedPosition() === pos" (mousedown)="selectPosition(pos)">
-            {{ pos }}
-          </button>
-        }
+        <button class="dropdown-item" [class.active]="filterActive() === 'all'"      (mousedown)="selectFilter('all')">All employees</button>
+        <button class="dropdown-item" [class.active]="filterActive() === 'active'"   (mousedown)="selectFilter('active')">Active</button>
+        <button class="dropdown-item" [class.active]="filterActive() === 'inactive'" (mousedown)="selectFilter('inactive')">Inactive</button>
       </div>
     }
   </div>
@@ -78,59 +73,7 @@
   <!-- Grid -->
   <div class="emp-grid">
     @for (emp of filtered(); track emp.id; let i = $index) {
-      <div class="emp-card">
-
-        <!-- Card head -->
-        <div class="card-head">
-          <div class="emp-avatar" [style.background]="avatarGradient(i)">
-            {{ initials(emp) }}
-          </div>
-          <div class="emp-info">
-            <div class="emp-name">{{ emp.firstName }} {{ emp.lastName }}</div>
-            @if (emp.position?.name) {
-              <div class="emp-position">{{ emp.position!.name }}</div>
-            }
-            <div class="emp-status" [class.emp-status--inactive]="!emp.isActive">
-              <span class="status-dot"></span>
-              {{ emp.isActive ? 'Active' : 'Inactive' }}
-            </div>
-          </div>
-        </div>
-
-        <!-- Description -->
-        @if (emp.description) {
-          <p class="emp-description">{{ emp.description }}</p>
-        }
-
-        <!-- Meta -->
-        <div class="emp-meta">
-          <div class="meta-row">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-            </svg>
-            <span>{{ emp.user.email }}</span>
-          </div>
-          @if (emp.phone) {
-            <div class="meta-row">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/>
-              </svg>
-              <span>{{ emp.phone }}</span>
-            </div>
-          }
-        </div>
-
-        <!-- Footer -->
-        <div class="card-foot">
-          <button class="edit-link" (click)="edit(emp)">
-            Edit profile
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-            </svg>
-          </button>
-        </div>
-
-      </div>
+      <app-employee-card [employee]="emp" [index]="i" (clicked)="view($event)" />
     }
   </div>
 

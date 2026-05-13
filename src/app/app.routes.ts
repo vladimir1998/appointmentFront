@@ -13,8 +13,8 @@ import { AdminPositionList } from './admin/position-list/admin-position-list';
 import { AdminPositionForm } from './admin/position-form/admin-position-form';
 import { AppointmentList } from './appointments/appointment-list/appointment-list';
 import { AppointmentForm } from './appointments/appointment-form/appointment-form';
-import { EmployeeList } from './users/user-list/user-list';
-import { EmployeeDetail } from './users/user-detail/user-detail';
+import { EmployeeList } from './employees/employee-list/employee-list';
+import { EmployeeDetail } from './employees/employee-detail/employee-detail';
 import { AdminInvite } from './admin/invite/admin-invite';
 import { AdminUserList } from './admin/user-list/admin-user-list';
 import { AdminInviteList } from './admin/invite-list/admin-invite-list';
@@ -50,14 +50,14 @@ export const routes: Routes = [
     path: '',
     component: Layout,
     children: [
+      { path: 'services', component: ServiceCatalog },
+      { path: 'employees', component: EmployeeList },
+      { path: 'employees/:id', component: EmployeeDetail },
       { path: 'components', component: Components },
       { path: 'example', component: Example },
-      { path: 'services', component: ServiceCatalog },
       { path: 'dashboard/:orgId', component: Dashboard },
       { path: 'organizations', component: OrganizationList },
       { path: 'organizations/create', component: OrganizationCreate },
-      { path: 'employees', component: EmployeeList },
-      { path: 'employees/:id', component: EmployeeDetail },
       { path: 'appointments', component: AppointmentList },
       { path: 'appointments/create', component: AppointmentForm },
       { path: 'appointments/:id/edit', component: AppointmentForm },

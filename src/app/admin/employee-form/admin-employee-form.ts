@@ -2,16 +2,40 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { QuillModule } from 'ngx-quill';
+import Quill from 'quill';
+import { htmlEditButton } from 'quill-html-edit-button';
+
+Quill.register('modules/htmlEditButton', htmlEditButton);
 import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { PositionsApiService } from '../../core/services/positions-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Position } from '../../core/models/position.model';
 import { User } from '../../core/models/user.model';
-import { MOCK_EMPLOYEES } from '../../employees/employee-list/employee-list.mock';
+import { MOCK_EMPLOYEES } from '../../core/mocks/mock-employees';
 import { MOCK_USERS } from '../../users/user.mock';
+import { MOCK_SERVICES } from '../../core/mocks/mock-services';
+import { Service } from '../../core/models/service.model';
 import { InputComponent } from '../../common/input/input.component';
 import { TextareaComponent } from '../../common/textarea/textarea.component';
 import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
+import { AboutBlock } from '../../common/about-block/about-block';
+import { WorkScheduleEntry, DayOfWeek } from '../../core/models/employee.model';
+
+export const DAYS_OF_WEEK: { day: DayOfWeek; label: string }[] = [
+  { day: 'monday',    label: 'Monday' },
+  { day: 'tuesday',   label: 'Tuesday' },
+  { day: 'wednesday', label: 'Wednesday' },
+  { day: 'thursday',  label: 'Thursday' },
+  { day: 'friday',    label: 'Friday' },
+  { day: 'saturday',  label: 'Saturday' },
+  { day: 'sunday',    label: 'Sunday' },
+];
+
+const DEFAULT_SCHEDULE: WorkScheduleEntry[] = DAYS_OF_WEEK.map(({ day }) => ({
+  day,
+  isWorking: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].includes(day),
+  intervals: [{ startTime: '09:00', endTime: '18:00' }],
+}));
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #fcd34d, #b45309)',
@@ -39,11 +63,20 @@ export const QUILL_MODULES = {
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['clean'],
   ],
+  htmlEditButton: {
+    debug: false,
+    msg: 'Edit HTML',
+    okText: 'Ok',
+    cancelText: 'Cancel',
+    buttonHTML: '&lt;&gt;',
+    buttonTitle: 'Edit HTML source',
+    syntax: false,
+  },
 };
 
 @Component({
   selector: 'app-admin-employee-form',
-  imports: [FormsModule, RouterLink, InputComponent, TextareaComponent, ImageUrlPickerComponent, QuillModule],
+  imports: [FormsModule, RouterLink, InputComponent, TextareaComponent, ImageUrlPickerComponent, QuillModule, AboutBlock],
   templateUrl: './admin-employee-form.html',
   styleUrl: './admin-employee-form.scss',
 })
@@ -65,6 +98,10 @@ export class AdminEmployeeForm implements OnInit {
   photo = '';
   description = '';
   about: string[] = [''];
+  education: string[] = [''];
+  certificates: string[] = [''];
+  workSchedule: WorkScheduleEntry[] = DEFAULT_SCHEDULE.map(e => ({ ...e }));
+  readonly daysOfWeek = DAYS_OF_WEEK;
   isActive = true;
   isPublic = false;
   positionId = '';
@@ -80,6 +117,35 @@ export class AdminEmployeeForm implements OnInit {
   users = signal<User[]>([]);
   userSearch = signal('');
   userDropdownOpen = signal(false);
+
+  selectedServices: Service[] = [];
+  serviceSearch = signal('');
+  serviceDropdownOpen = signal(false);
+
+  filteredServices = computed(() => {
+    const q = this.serviceSearch().toLowerCase();
+    if (!q) return MOCK_SERVICES;
+    return MOCK_SERVICES.filter(s =>
+      s.title.toLowerCase().includes(q) ||
+      s.description.toLowerCase().includes(q)
+    );
+  });
+
+  isServiceSelected(svc: Service): boolean {
+    return this.selectedServices.some(s => s.id === svc.id);
+  }
+
+  toggleService(svc: Service): void {
+    if (this.isServiceSelected(svc)) {
+      this.selectedServices = this.selectedServices.filter(s => s.id !== svc.id);
+    } else {
+      this.selectedServices = [...this.selectedServices, svc];
+    }
+  }
+
+  removeService(svc: Service): void {
+    this.selectedServices = this.selectedServices.filter(s => s.id !== svc.id);
+  }
 
   filteredUsers = computed(() => {
     const q = this.userSearch().toLowerCase();
@@ -160,10 +226,53 @@ export class AdminEmployeeForm implements OnInit {
     this.photo = emp.photo ?? '';
     this.description = emp.description ?? '';
     this.about = emp.about?.length ? [...emp.about] : [''];
+    this.education = emp.education?.length ? [...emp.education] : [''];
+    this.certificates = emp.certificates?.length ? [...emp.certificates] : [''];
+    this.workSchedule = emp.workSchedule?.length
+      ? DAYS_OF_WEEK.map(({ day }) => {
+          const found = emp.workSchedule!.find(e => e.day === day);
+          return found ? { ...found } : { day, isWorking: false, intervals: [] };
+        })
+      : DEFAULT_SCHEDULE.map(e => ({ ...e }));
     this.isActive = emp.isActive;
     this.isPublic = emp.isPublic ?? false;
     this.positionId = emp.positionId ?? '';
     this.linkedUser = emp.user;
+    this.selectedServices = emp.services ? [...emp.services] : [];
+  }
+
+  addInterval(dayIndex: number): void {
+    const entry = this.workSchedule[dayIndex];
+    entry.intervals = [...entry.intervals, { startTime: '09:00', endTime: '18:00' }];
+  }
+
+  removeInterval(dayIndex: number, intervalIndex: number): void {
+    const entry = this.workSchedule[dayIndex];
+    entry.intervals = entry.intervals.filter((_, i) => i !== intervalIndex);
+  }
+
+  addCertificate(): void {
+    this.certificates = [...this.certificates, ''];
+  }
+
+  removeCertificate(index: number): void {
+    this.certificates = this.certificates.filter((_, i) => i !== index);
+  }
+
+  updateCertificate(index: number, value: string): void {
+    this.certificates = this.certificates.map((item, i) => i === index ? value : item);
+  }
+
+  addEducation(): void {
+    this.education = [...this.education, ''];
+  }
+
+  removeEducation(index: number): void {
+    this.education = this.education.filter((_, i) => i !== index);
+  }
+
+  updateEducation(index: number, value: string): void {
+    this.education = this.education.map((item, i) => i === index ? value : item);
   }
 
   addAboutBlock(): void {
@@ -183,6 +292,8 @@ export class AdminEmployeeForm implements OnInit {
     this.loading.set(true);
 
     const about = this.about.filter(b => b.trim());
+    const education = this.education.filter(e => e.trim());
+    const certificates = this.certificates.filter(c => c.trim());
 
     const request$ = this.isEdit
       ? this.api.update(this.employeeId!, {
@@ -193,6 +304,9 @@ export class AdminEmployeeForm implements OnInit {
           ...(this.photo && { photo: this.photo }),
           ...(this.description && { description: this.description }),
           ...(about.length && { about }),
+          ...(education.length && { education }),
+          ...(certificates.length && { certificates }),
+          workSchedule: this.workSchedule,
           isActive: this.isActive,
           isPublic: this.isPublic,
           ...(this.positionId && { positionId: this.positionId }),
@@ -206,6 +320,7 @@ export class AdminEmployeeForm implements OnInit {
           ...(this.photo && { photo: this.photo }),
           ...(this.description && { description: this.description }),
           ...(about.length && { about }),
+          ...(education.length && { education }),
           isActive: this.isActive,
           isPublic: this.isPublic,
           ...(this.positionId && { positionId: this.positionId }),

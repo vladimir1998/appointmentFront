@@ -96,6 +96,13 @@
                   <span>{{ emp.phone }}</span>
                 }
               </div>
+              @if (emp.services?.length) {
+                <div class="emp-services">
+                  @for (svc of emp.services!; track svc.id) {
+                    <span class="svc-tag">{{ svc.title }}</span>
+                  }
+                </div>
+              }
             </td>
             <td>
               @if (emp.position?.name) {

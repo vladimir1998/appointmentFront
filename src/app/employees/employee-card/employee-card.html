@@ -1,0 +1,72 @@
+<div class="emp-card" (click)="onClick()">
+
+  <!-- Card head -->
+  <div class="card-head">
+    @if (employee().photo) {
+      <div class="emp-avatar emp-avatar--photo">
+        <img [src]="employee().photo" [alt]="employee().firstName" />
+      </div>
+    } @else {
+      <div class="emp-avatar" [style.background]="avatarGradient()">
+        {{ initials() }}
+      </div>
+    }
+    <div class="emp-info">
+      <div class="emp-name">{{ employee().firstName }} {{ employee().lastName }}</div>
+      @if (employee().position?.name) {
+        <div class="emp-position">{{ employee().position!.name }}</div>
+      }
+    </div>
+  </div>
+
+  <!-- Description -->
+  @if (employee().description) {
+    <p class="emp-description">{{ employee().description }}</p>
+  }
+
+  <!-- Services -->
+  @if (employee().services?.length) {
+    <div class="emp-services">
+      @for (svc of employee().services!.slice(0, 3); track svc.id) {
+        <app-service-badge [label]="svc.title" />
+      }
+      @if (employee().services!.length > 3) {
+        <app-service-badge label="" [more]="employee().services!.length - 3" />
+      }
+    </div>
+  }
+
+  <!-- Experience -->
+  @if (employee().experienceYears) {
+    <div class="emp-experience">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+      </svg>
+      {{ employee().experienceYears }} years
+    </div>
+  }
+
+  <!-- Meta -->
+  <div class="emp-meta">
+    <div class="meta-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+      </svg>
+      <span>{{ employee().user.email }}</span>
+    </div>
+    @if (employee().phone) {
+      <div class="meta-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/>
+        </svg>
+        <span>{{ employee().phone }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Schedule -->
+  @if (employee().workSchedule?.length) {
+    <app-schedule-section [schedule]="employee().workSchedule!" />
+  }
+
+</div>

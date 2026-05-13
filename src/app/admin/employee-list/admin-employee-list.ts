@@ -3,7 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Employee } from '../../core/models/employee.model';
-import { MOCK_EMPLOYEES } from '../../employees/employee-list/employee-list.mock';
+import { MOCK_EMPLOYEES } from '../../core/mocks/mock-employees';
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #fcd34d, #b45309)',

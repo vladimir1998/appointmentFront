@@ -1,16 +1,21 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
+import { QuillModule } from 'ngx-quill';
 import { ServicesApiService } from '../../core/services/services-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
+import { MOCK_SERVICES } from '../../core/mocks/mock-services';
+import { MOCK_EMPLOYEES } from '../../core/mocks/mock-employees';
+import { Employee } from '../../core/models/employee.model';
 import { InputComponent } from '../../common/input/input.component';
 import { TextareaComponent } from '../../common/textarea/textarea.component';
 import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
+import { AboutBlock } from '../../common/about-block/about-block';
 
 @Component({
   selector: 'app-admin-service-form',
-  imports: [FormsModule, DecimalPipe, InputComponent, TextareaComponent, ImageUrlPickerComponent],
+  imports: [FormsModule, DecimalPipe, QuillModule, InputComponent, TextareaComponent, ImageUrlPickerComponent, AboutBlock],
   templateUrl: './admin-service-form.html',
   styleUrl: './admin-service-form.scss',
 })
@@ -29,6 +34,34 @@ export class AdminServiceForm implements OnInit {
   price: number | null = null;
   duration: number | null = null;
   durationMax: number | null = null;
+  about: string[] = [''];
+
+
+  selectedEmployees: Employee[] = [];
+  employeeSearch = signal('');
+  employeeDropdownOpen = signal(false);
+  availableEmployees = signal<Employee[]>([]);
+
+  filteredEmployees = computed(() => {
+    const q = this.employeeSearch().toLowerCase();
+    return this.availableEmployees()
+      .filter(e => !q || `${e.firstName} ${e.lastName}`.toLowerCase().includes(q) ||
+        e.position?.name?.toLowerCase().includes(q));
+  });
+
+  isEmployeeSelected(emp: Employee): boolean {
+    return this.selectedEmployees.some(e => e.id === emp.id);
+  }
+
+  toggleEmployee(emp: Employee): void {
+    this.isEmployeeSelected(emp)
+      ? this.selectedEmployees = this.selectedEmployees.filter(e => e.id !== emp.id)
+      : this.selectedEmployees = [...this.selectedEmployees, emp];
+  }
+
+  removeEmployee(emp: Employee): void {
+    this.selectedEmployees = this.selectedEmployees.filter(e => e.id !== emp.id);
+  }
 
   loading = signal(false);
   fetchLoading = signal(false);
@@ -37,6 +70,7 @@ export class AdminServiceForm implements OnInit {
   ngOnInit(): void {
     this.serviceId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.serviceId;
+    this.availableEmployees.set(MOCK_EMPLOYEES);
 
     if (this.isEdit && this.serviceId) {
       this.fetchLoading.set(true);
@@ -48,10 +82,24 @@ export class AdminServiceForm implements OnInit {
           this.price = service.price;
           this.duration = service.duration;
           this.durationMax = service.durationMax ?? null;
+          this.about = service.about?.length ? [...service.about] : [''];
+          this.selectedEmployees = service.employee ? [...service.employee] : [];
           this.fetchLoading.set(false);
         },
         error: () => {
-          this.error.set('Failed to load service');
+          const mock = MOCK_SERVICES.find(s => s.id === this.serviceId);
+          if (mock) {
+            this.title = mock.title;
+            this.description = mock.description;
+            this.photo = mock.photo ?? '';
+            this.price = mock.price;
+            this.duration = mock.duration;
+            this.durationMax = mock.durationMax ?? null;
+            this.about = mock.about?.length ? [...mock.about] : [''];
+            this.selectedEmployees = mock.employee ? [...mock.employee] : [];
+          } else {
+            this.error.set('Failed to load service');
+          }
           this.fetchLoading.set(false);
         },
       });
@@ -62,6 +110,8 @@ export class AdminServiceForm implements OnInit {
     this.error.set(null);
     this.loading.set(true);
 
+    const about = this.about.filter(b => b.trim());
+
     const base = {
       title: this.title,
       description: this.description,
@@ -69,6 +119,7 @@ export class AdminServiceForm implements OnInit {
       price: this.price!,
       duration: this.duration!,
       ...(this.durationMax != null && { durationMax: this.durationMax }),
+      ...(about.length && { about }),
     };
 
     const request$ = this.isEdit
@@ -86,6 +137,14 @@ export class AdminServiceForm implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/admin/services']);
+  }
+
+  addAboutBlock(): void { this.about = [...this.about, '']; }
+
+  removeAboutBlock(index: number): void { this.about = this.about.filter((_, i) => i !== index); }
+
+  updateAboutBlock(index: number, value: string): void {
+    this.about = this.about.map((item, i) => i === index ? value : item);
   }
 
   get priceStr(): string { return this.price?.toString() ?? ''; }

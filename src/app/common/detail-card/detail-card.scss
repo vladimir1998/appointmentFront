@@ -1,0 +1,29 @@
+.detail-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  margin-bottom: 14px;
+  padding: 18px 22px;
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+
+  ::ng-deep svg {
+    width: 16px;
+    height: 16px;
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+  }
+}

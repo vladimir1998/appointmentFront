@@ -1,0 +1,17 @@
+@if (groups().length) {
+  <div class="schedule">
+    @for (group of groups(); track group.days; let last = $last) {
+      <div class="schedule-row">
+        <span class="schedule-days">{{ group.days }}</span>
+        <span class="schedule-intervals">
+          @for (iv of group.intervals; track $index) {
+            <span class="schedule-time">{{ iv.startTime }} – {{ iv.endTime }}</span>
+          }
+        </span>
+      </div>
+      @if (!last) {
+        <div class="schedule-divider"></div>
+      }
+    }
+  </div>
+}

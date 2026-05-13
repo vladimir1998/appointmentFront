@@ -1,3 +1,5 @@
+import { Employee } from "./employee.model";
+
 export interface Service {
   id: string;
   title: string;
@@ -6,7 +8,9 @@ export interface Service {
   price: number;
   duration: number;
   durationMax?: number;
+  about?: string[];
   organizationId: string;
+  employee?: Employee[];
 }
 
 export interface CreateServiceRequest {
@@ -16,6 +20,7 @@ export interface CreateServiceRequest {
   price: number;
   duration: number;
   durationMax?: number;
+  about?: string[];
   organizationId: string;
 }
 
@@ -26,4 +31,5 @@ export interface UpdateServiceRequest {
   price?: number;
   duration?: number;
   durationMax?: number;
+  about?: string[];
 }
