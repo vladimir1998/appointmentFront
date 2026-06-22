@@ -8,12 +8,14 @@ import { htmlEditButton } from 'quill-html-edit-button';
 Quill.register('modules/htmlEditButton', htmlEditButton);
 import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { PositionsApiService } from '../../core/services/positions-api.service';
+import { SpecialtyApiService } from '../../core/services/specialty-api.service';
+import { ServicesApiService } from '../../core/services/services-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
+import { InviteApiService } from '../../core/services/invite-api.service';
 import { Position } from '../../core/models/position.model';
+import { Specialty } from '../../core/models/specialty.model';
 import { User } from '../../core/models/user.model';
 import { MOCK_EMPLOYEES } from '../../core/mocks/mock-employees';
-import { MOCK_USERS } from '../../users/user.mock';
-import { MOCK_SERVICES } from '../../core/mocks/mock-services';
 import { Service } from '../../core/models/service.model';
 import { InputComponent } from '../../common/input/input.component';
 import { TextareaComponent } from '../../common/textarea/textarea.component';
@@ -83,6 +85,9 @@ export const QUILL_MODULES = {
 export class AdminEmployeeForm implements OnInit {
   private readonly api = inject(EmployeesApiService);
   private readonly positionsApi = inject(PositionsApiService);
+  private readonly specialtyApi = inject(SpecialtyApiService);
+  private readonly servicesApi = inject(ServicesApiService);
+  private readonly inviteApi = inject(InviteApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly orgContext = inject(OrganizationContextService);
@@ -102,6 +107,7 @@ export class AdminEmployeeForm implements OnInit {
   certificates: string[] = [''];
   workSchedule: WorkScheduleEntry[] = DEFAULT_SCHEDULE.map(e => ({ ...e }));
   readonly daysOfWeek = DAYS_OF_WEEK;
+  experienceYears: number | null = null;
   isActive = true;
   isPublic = false;
   positionId = '';
@@ -118,17 +124,31 @@ export class AdminEmployeeForm implements OnInit {
   userSearch = signal('');
   userDropdownOpen = signal(false);
 
+  services = signal<Service[]>([]);
+  servicesLoading = signal(false);
   selectedServices: Service[] = [];
   serviceSearch = signal('');
   serviceDropdownOpen = signal(false);
 
+  specialties = signal<Specialty[]>([]);
+  specialtiesLoading = signal(false);
+  selectedSpecialties: Specialty[] = [];
+  specialtySearch = signal('');
+  specialtyDropdownOpen = signal(false);
+
   filteredServices = computed(() => {
     const q = this.serviceSearch().toLowerCase();
-    if (!q) return MOCK_SERVICES;
-    return MOCK_SERVICES.filter(s =>
+    if (!q) return this.services();
+    return this.services().filter(s =>
       s.title.toLowerCase().includes(q) ||
       s.description.toLowerCase().includes(q)
     );
+  });
+
+  filteredSpecialties = computed(() => {
+    const q = this.specialtySearch().toLowerCase();
+    if (!q) return this.specialties();
+    return this.specialties().filter(s => s.name.toLowerCase().includes(q));
   });
 
   isServiceSelected(svc: Service): boolean {
@@ -145,6 +165,22 @@ export class AdminEmployeeForm implements OnInit {
 
   removeService(svc: Service): void {
     this.selectedServices = this.selectedServices.filter(s => s.id !== svc.id);
+  }
+
+  isSpecialtySelected(sp: Specialty): boolean {
+    return this.selectedSpecialties.some(s => s.id === sp.id);
+  }
+
+  toggleSpecialty(sp: Specialty): void {
+    if (this.isSpecialtySelected(sp)) {
+      this.selectedSpecialties = this.selectedSpecialties.filter(s => s.id !== sp.id);
+    } else {
+      this.selectedSpecialties = [...this.selectedSpecialties, sp];
+    }
+  }
+
+  removeSpecialty(sp: Specialty): void {
+    this.selectedSpecialties = this.selectedSpecialties.filter(s => s.id !== sp.id);
   }
 
   filteredUsers = computed(() => {
@@ -178,13 +214,45 @@ export class AdminEmployeeForm implements OnInit {
       this.positions.set(MOCK_POSITIONS);
     }
 
-    this.users.set(MOCK_USERS);
+    if (orgId) {
+      this.servicesLoading.set(true);
+      this.servicesApi.getAll(orgId).subscribe({
+        next: (data) => {
+          this.services.set(data);
+          this.servicesLoading.set(false);
+        },
+        error: () => this.servicesLoading.set(false),
+      });
+    }
+
+    this.specialtiesLoading.set(true);
+    this.specialtyApi.getAll().subscribe({
+      next: (data) => {
+        this.specialties.set(data);
+        this.specialtiesLoading.set(false);
+      },
+      error: () => this.specialtiesLoading.set(false),
+    });
 
     const preselectedUserId = this.route.snapshot.queryParamMap.get('userId');
-    if (preselectedUserId) {
-      const user = MOCK_USERS.find(u => u.id === preselectedUserId);
-      if (user) this.selectUser(user);
-    }
+
+    this.inviteApi.getAll().subscribe({
+      next: (invites) => {
+        const accepted = invites
+          .filter(i => !!i.acceptedAt)
+          .map(i => i.user as unknown as User);
+        const unique = accepted.filter((u, idx, arr) => arr.findIndex(x => x.id === u.id) === idx);
+        this.users.set(unique);
+
+        if (preselectedUserId) {
+          const user = unique.find(u => u.id === preselectedUserId);
+          if (user) this.selectUser(user);
+        }
+      },
+      error: () => {
+        this.users.set([]);
+      },
+    });
 
     if (this.isEdit && this.employeeId) {
       this.fetchLoading.set(true);
@@ -219,8 +287,8 @@ export class AdminEmployeeForm implements OnInit {
   }
 
   private fillForm(emp: import('../../core/models/employee.model').Employee): void {
-    this.firstName = emp.firstName;
-    this.lastName = emp.lastName;
+    this.firstName = emp.firstName ?? '';
+    this.lastName = emp.lastName ?? '';
     this.email = emp.user.email;
     this.phone = emp.phone ?? '';
     this.photo = emp.photo ?? '';
@@ -234,11 +302,14 @@ export class AdminEmployeeForm implements OnInit {
           return found ? { ...found } : { day, isWorking: false, intervals: [] };
         })
       : DEFAULT_SCHEDULE.map(e => ({ ...e }));
+    this.experienceYears = emp.experienceYears ?? null;
+
     this.isActive = emp.isActive;
     this.isPublic = emp.isPublic ?? false;
     this.positionId = emp.positionId ?? '';
     this.linkedUser = emp.user;
     this.selectedServices = emp.services ? [...emp.services] : [];
+    this.selectedSpecialties = emp.specialties ? [...emp.specialties] : [];
   }
 
   addInterval(dayIndex: number): void {
@@ -307,23 +378,30 @@ export class AdminEmployeeForm implements OnInit {
           ...(education.length && { education }),
           ...(certificates.length && { certificates }),
           workSchedule: this.workSchedule,
+          serviceIds: this.selectedServices.map(s => s.id),
+          specialtyIds: this.selectedSpecialties.map(s => s.id),
           isActive: this.isActive,
           isPublic: this.isPublic,
           ...(this.positionId && { positionId: this.positionId }),
+          ...(this.experienceYears != null && { experienceYears: this.experienceYears }),
         })
-      : this.api.register({
-          email: this.email,
-          password: '',
-          firstName: this.firstName,
-          lastName: this.lastName,
+      : this.api.create({
+          userId: this.linkedUser!.id,
+          ...(this.firstName && { firstName: this.firstName }),
+          ...(this.lastName && { lastName: this.lastName }),
           ...(this.phone && { phone: this.phone }),
           ...(this.photo && { photo: this.photo }),
           ...(this.description && { description: this.description }),
           ...(about.length && { about }),
           ...(education.length && { education }),
+          ...(certificates.length && { certificates }),
+          workSchedule: this.workSchedule,
+          ...(this.selectedServices.length && { serviceIds: this.selectedServices.map(s => s.id) }),
+          ...(this.selectedSpecialties.length && { specialtyIds: this.selectedSpecialties.map(s => s.id) }),
           isActive: this.isActive,
           isPublic: this.isPublic,
           ...(this.positionId && { positionId: this.positionId }),
+          ...(this.experienceYears != null && { experienceYears: this.experienceYears }),
           organizationId: this.orgContext.currentOrgId()!,
         });
 

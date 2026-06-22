@@ -22,9 +22,11 @@
       <div class="hero-row">
         <div class="hero-info">
           <h1 class="hero-name">{{ employee()!.firstName }} {{ employee()!.lastName }}</h1>
-          @if (employee()!.position?.name || employee()!.experienceYears) {
+          @if (employee()!.specialties?.length || employee()!.position?.name || employee()!.experienceYears) {
             <div class="hero-spec">
-              @if (employee()!.position?.name) {
+              @if (employee()!.specialties?.length) {
+                <span>{{ specialtyNames() }}</span>
+              } @else if (employee()!.position?.name) {
                 <span>{{ employee()!.position!.name }}</span>
               }
               @if (employee()!.experienceYears) {

@@ -123,10 +123,23 @@
   line-height: 1.4;
 }
 
+.svc-price-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 .svc-price {
   font-weight: 600;
   color: var(--teal-600);
   white-space: nowrap;
+}
+
+.svc-price-comment {
+  font-size: 11.5px;
+  color: var(--text-subtle);
+  line-height: 1.3;
+  max-width: 200px;
 }
 
 .svc-empty {

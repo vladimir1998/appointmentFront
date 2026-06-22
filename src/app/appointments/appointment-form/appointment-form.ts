@@ -49,7 +49,7 @@ export class AppointmentForm implements OnInit {
       this.refsLoading.set(true);
       forkJoin({
         services: this.servicesApi.getAll(orgId),
-        employees: this.employeesApi.getAll(orgId),
+        employees: this.employeesApi.getAll(),
       }).subscribe({
         next: ({ services, employees }) => {
           this.services.set(services);

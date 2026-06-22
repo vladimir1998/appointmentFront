@@ -103,6 +103,13 @@
                   }
                 </div>
               }
+              @if (emp.specialties?.length) {
+                <div class="emp-services">
+                  @for (sp of emp.specialties!; track sp.id) {
+                    <span class="svc-tag svc-tag--specialty">{{ sp.name }}</span>
+                  }
+                </div>
+              }
             </td>
             <td>
               @if (emp.position?.name) {
@@ -157,7 +164,7 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="7" class="empty-cell">No employees found</td>
+            <td colspan="8" class="empty-cell">No employees found</td>
           </tr>
         }
       </tbody>

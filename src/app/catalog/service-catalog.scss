@@ -187,11 +187,26 @@
   gap: 12px;
 }
 
+.card-price-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
 .card-price {
   font-size: 18px;
   font-weight: 700;
   color: var(--text);
   letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.card-price-comment {
+  font-size: 11.5px;
+  color: var(--text-subtle);
+  line-height: 1.4;
+  white-space: normal;
 }
 
 .btn-book {

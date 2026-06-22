@@ -1,11 +1,16 @@
 import { Employee } from "./employee.model";
 
+export type PriceType = 'exact' | 'approximate' | 'from' | 'range';
+
 export interface Service {
   id: string;
   title: string;
   description: string;
   photo?: string;
   price: number;
+  priceMax?: number;
+  priceType?: PriceType;
+  priceComment?: string;
   duration: number;
   durationMax?: number;
   about?: string[];
@@ -18,6 +23,9 @@ export interface CreateServiceRequest {
   description: string;
   photo?: string;
   price: number;
+  priceMax?: number;
+  priceType?: PriceType;
+  priceComment?: string;
   duration: number;
   durationMax?: number;
   about?: string[];
@@ -29,6 +37,9 @@ export interface UpdateServiceRequest {
   description?: string;
   photo?: string;
   price?: number;
+  priceMax?: number;
+  priceType?: PriceType;
+  priceComment?: string;
   duration?: number;
   durationMax?: number;
   about?: string[];

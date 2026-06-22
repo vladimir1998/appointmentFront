@@ -4,7 +4,6 @@ import { DecimalPipe } from '@angular/common';
 import { ServicesApiService } from '../../core/services/services-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Service } from '../../core/models/service.model';
-import { MOCK_SERVICES } from '../../core/mocks/mock-services';
 
 @Component({
   selector: 'app-service-list',
@@ -31,7 +30,7 @@ export class ServiceList implements OnInit {
   private load(): void {
     const orgId = this.orgContext.currentOrgId();
     if (!orgId) {
-      this.services.set(MOCK_SERVICES);
+      this.error.set('No organization selected');
       this.loading.set(false);
       return;
     }
@@ -39,11 +38,11 @@ export class ServiceList implements OnInit {
     this.loading.set(true);
     this.api.getAll(orgId).subscribe({
       next: (data) => {
-        this.services.set(data.length ? data : MOCK_SERVICES);
+        this.services.set(data);
         this.loading.set(false);
       },
       error: () => {
-        this.services.set(MOCK_SERVICES);
+        this.error.set('Failed to load services');
         this.loading.set(false);
       },
     });

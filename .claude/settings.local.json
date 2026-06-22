@@ -4,7 +4,9 @@
       "Bash(ng generate:*)",
       "Bash(powershell -Command:*)",
       "Bash(npx ng:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Read(//home/developer/Documents/shedul/**)",
+      "Bash(script -q -c \"npx prisma migrate dev --name add-employee-profile-fields\" /dev/null)"
     ]
   }
 }

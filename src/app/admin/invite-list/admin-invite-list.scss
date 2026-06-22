@@ -159,7 +159,17 @@
 }
 
 /* ── Cells ───────────────────────────────────── */
+.cell-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
 .cell-email {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.cell-org {
   font-weight: 500;
   color: var(--text);
 }

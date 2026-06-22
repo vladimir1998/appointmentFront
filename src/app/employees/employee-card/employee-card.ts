@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Employee } from '../../core/models/employee.model';
+import { PublicEmployee } from '../../core/models/employee.model';
 import { ScheduleSection } from '../../common/schedule-section/schedule-section';
 import { ServiceBadge } from '../../common/service-badge/service-badge';
 
@@ -20,10 +20,10 @@ const AVATAR_GRADIENTS = [
   styleUrl: './employee-card.scss',
 })
 export class EmployeeCard {
-  employee = input.required<Employee>();
+  employee = input.required<PublicEmployee>();
   index = input<number>(0);
 
-  clicked = output<Employee>();
+  clicked = output<PublicEmployee>();
 
   avatarGradient(): string {
     return AVATAR_GRADIENTS[this.index() % AVATAR_GRADIENTS.length];
@@ -31,7 +31,11 @@ export class EmployeeCard {
 
   initials(): string {
     const emp = this.employee();
-    return `${emp.firstName[0]}${emp.lastName[0]}`.toUpperCase();
+    return `${emp.firstName?.[0] ?? ''}${emp.lastName?.[0] ?? ''}`.toUpperCase() || '?';
+  }
+
+  specialtyNames(): string {
+    return (this.employee().specialties ?? []).map(s => s.name).join(', ');
   }
 
   onClick(): void {

@@ -1,14 +1,14 @@
 <!-- Page header -->
 <div class="page-head">
   <div>
-    <h1 class="page-title">Positions</h1>
-    <p class="page-sub">Manage roles and permissions for your team</p>
+    <h1 class="page-title">Specialties</h1>
+    <p class="page-sub">Manage specialties available for your team members</p>
   </div>
-  <a class="btn-primary" routerLink="/admin/positions/create">
+  <a class="btn-primary" routerLink="/admin/specialties/create">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
     </svg>
-    Add position
+    Add specialty
   </a>
 </div>
 
@@ -28,34 +28,22 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Permissions</th>
           <th style="width: 88px"></th>
         </tr>
       </thead>
       <tbody>
-        @for (position of positions(); track position.id) {
+        @for (sp of specialties(); track sp.id) {
           <tr>
-            <td><span class="pos-name">{{ position.name }}</span></td>
-            <td>
-              @if (position.permissions.length) {
-                <div class="perm-list">
-                  @for (perm of position.permissions; track perm.id) {
-                    <span class="perm-badge">{{ perm.value }}</span>
-                  }
-                </div>
-              } @else {
-                <span class="svc-empty">—</span>
-              }
-            </td>
+            <td><span class="sp-name">{{ sp.name }}</span></td>
             <td>
               <div class="row-actions">
-                <button class="action-btn" title="Edit" (click)="edit(position)">
+                <button class="action-btn" title="Edit" (click)="edit(sp)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/>
                   </svg>
                 </button>
-                <button class="action-btn action-btn--danger" title="Delete" (click)="openDeleteModal(position)">
+                <button class="action-btn action-btn--danger" title="Delete" (click)="openDeleteModal(sp)">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="3 6 5 6 21 6"/>
                     <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
@@ -68,14 +56,14 @@
           </tr>
         } @empty {
           <tr>
-            <td colspan="3" class="empty-cell">No positions found</td>
+            <td colspan="2" class="empty-cell">No specialties found</td>
           </tr>
         }
       </tbody>
     </table>
 
     <div class="table-footer">
-      {{ positions().length }} position{{ positions().length !== 1 ? 's' : '' }}
+      {{ specialties().length }} specialty{{ specialties().length !== 1 ? 's' : '' }}
     </div>
   }
 
@@ -93,7 +81,7 @@
           <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
         </svg>
       </div>
-      <h3>Delete position?</h3>
+      <h3>Delete specialty?</h3>
       <p>«{{ deleteTarget()!.name }}» will be permanently deleted and cannot be recovered.</p>
       <div class="modal-actions">
         <button class="btn-cancel" (click)="cancelDelete()">Cancel</button>

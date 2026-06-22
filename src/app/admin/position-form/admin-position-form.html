@@ -1,55 +1,167 @@
-<div class="page-container">
-  <form class="position-form" (ngSubmit)="onSubmit()" #posForm="ngForm">
-    <h2>{{ isEdit ? 'Редактировать должность' : 'Создать должность' }}</h2>
+<!-- Page header -->
+<div class="page-head">
+  <div class="page-head-left">
+    <button class="btn-back" type="button" (click)="cancel()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+    </button>
+    <div>
+      <h1 class="page-title">{{ isEdit ? 'Edit position' : 'New position' }}</h1>
+      <p class="page-sub">{{ isEdit ? 'Update the position details below' : 'Set a name and configure access permissions' }}</p>
+    </div>
+  </div>
+</div>
 
-    @if (fetchLoading()) {
-      <p class="status">Загрузка...</p>
-    } @else {
-      @if (error()) {
-        <div class="error">{{ error() }}</div>
-      }
+@if (fetchLoading()) {
+  <div class="state-row">
+    <div class="spinner"></div>
+    <span>Loading position...</span>
+  </div>
+} @else {
+  <form class="form-layout" (ngSubmit)="onSubmit()" #posForm="ngForm">
 
-      <div class="field">
-        <label for="name">Название <span class="required">*</span></label>
-        <input id="name" type="text" name="name" [(ngModel)]="name" required placeholder="Администратор" />
+    <!-- Error banner -->
+    @if (error()) {
+      <div class="form-error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        {{ error() }}
       </div>
+    }
 
-      <div class="permissions-section">
-        <p class="permissions-title">Права доступа</p>
+    <div class="form-cols">
 
-        @for (mod of permissionsConfig; track mod.key) {
-          <div class="permission-module">
-            <label class="module-header">
-              <input
-                type="checkbox"
-                [checked]="isModuleAllChecked(mod)"
-                (change)="toggleModule(mod)"
-              />
-              <span class="module-name">{{ mod.module }}</span>
-            </label>
+      <!-- ── Left: main fields ── -->
+      <div class="form-card">
 
-            <div class="module-actions">
-              @for (action of mod.actions; track action.key) {
-                <label class="action-label">
-                  <input
-                    type="checkbox"
-                    [checked]="isChecked(mod.key, action.key)"
-                    (change)="togglePermission(mod.key, action.key)"
-                  />
-                  {{ action.label }}
-                </label>
+        <!-- Section: Name -->
+        <div class="section">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <span class="section-title">Position name</span>
+          </div>
+
+          <div class="field">
+            <label class="field-label">Name <span class="req">*</span></label>
+            <input
+              class="field-input"
+              type="text"
+              name="name"
+              [(ngModel)]="name"
+              required
+              placeholder="e.g. Administrator"
+            />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Section: Permissions -->
+        <div class="section">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <span class="section-title">Permissions</span>
+          </div>
+
+          @if (permissionsLoading()) {
+            <div class="perm-loading">
+              <div class="spinner"></div>
+              <span>Loading permissions...</span>
+            </div>
+          } @else {
+            <div class="perm-modules">
+              @for (group of groupedPermissions(); track group.module) {
+                <div class="perm-module">
+                  <label class="module-toggle">
+                    <input
+                      type="checkbox"
+                      class="module-checkbox"
+                      [checked]="isModuleAllChecked(group.perms)"
+                      (change)="toggleModule(group.perms)"
+                    />
+                    <span class="module-name">{{ group.module }}</span>
+                  </label>
+
+                  <div class="module-actions">
+                    @for (perm of group.perms; track perm.id) {
+                      <label class="action-item" [title]="perm.description || ''">
+                        <input
+                          type="checkbox"
+                          class="action-checkbox"
+                          [checked]="isChecked(perm.id)"
+                          (change)="togglePermission(perm.id)"
+                        />
+                        <span class="action-label">{{ perm.name }}</span>
+                      </label>
+                    }
+                  </div>
+                </div>
+              } @empty {
+                <p class="perm-empty">No permissions available</p>
               }
             </div>
+          }
+        </div>
+
+      </div>
+
+      <!-- ── Right: summary ── -->
+      <div class="summary-card">
+        <div class="summary-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+
+        <div class="summary-name">{{ name || 'Position name' }}</div>
+
+        <div class="summary-stat">
+          <span class="summary-stat-value">{{ selectedPermissions().size }}</span>
+          <span class="summary-stat-label">permission{{ selectedPermissions().size !== 1 ? 's' : '' }}</span>
+        </div>
+
+        @if (selectedPermissions().size) {
+          <div class="summary-perms">
+            @for (perm of selectedPermissionsArray(); track perm) {
+              <span class="summary-perm-badge">{{ perm }}</span>
+            }
           </div>
         }
       </div>
 
-      <div class="actions">
-        <button type="button" class="btn-cancel" (click)="cancel()">Отмена</button>
-        <button type="submit" [disabled]="posForm.invalid || loading()">
-          {{ loading() ? 'Сохранение...' : (isEdit ? 'Сохранить' : 'Создать') }}
-        </button>
-      </div>
-    }
+    </div>
+
+    <!-- Form actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+      <button
+        class="btn-submit"
+        type="submit"
+        [disabled]="posForm.invalid || loading()"
+      >
+        @if (loading()) {
+          <div class="spinner-sm"></div>
+          Saving...
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ isEdit ? 'Save changes' : 'Create position' }}
+        }
+      </button>
+    </div>
+
   </form>
-</div>
+}

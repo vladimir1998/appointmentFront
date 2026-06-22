@@ -1,9 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { EmployeesApiService } from '../../core/services/employees-api.service';
-import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { Employee } from '../../core/models/employee.model';
-import { MOCK_EMPLOYEES } from '../../core/mocks/mock-employees';
 
 const AVATAR_GRADIENTS = [
   'linear-gradient(135deg, #fcd34d, #b45309)',
@@ -23,7 +21,6 @@ const AVATAR_GRADIENTS = [
 })
 export class AdminEmployeeList implements OnInit {
   private readonly api = inject(EmployeesApiService);
-  private readonly orgContext = inject(OrganizationContextService);
   private readonly router = inject(Router);
 
   employees = signal<Employee[]>([]);
@@ -52,21 +49,15 @@ export class AdminEmployeeList implements OnInit {
   });
 
   ngOnInit(): void {
-    const orgId = this.orgContext.currentOrgId();
-    if (!orgId) {
-      this.employees.set(MOCK_EMPLOYEES);
-      this.loading.set(false);
-      return;
-    }
-
-    this.api.getAll(orgId).subscribe({
+    this.api.getAll().subscribe({
       next: (data) => {
-        this.employees.set(data.length ? data : MOCK_EMPLOYEES);
+        this.employees.set(data);
         this.loading.set(false);
       },
       error: () => {
-        this.employees.set(MOCK_EMPLOYEES);
+        this.employees.set([]);
         this.loading.set(false);
+        this.error.set('Failed to load employees');
       },
     });
   }
@@ -76,7 +67,7 @@ export class AdminEmployeeList implements OnInit {
   }
 
   initials(emp: Employee): string {
-    return `${emp.firstName[0]}${emp.lastName[0]}`.toUpperCase();
+    return `${emp.firstName?.[0] ?? ''}${emp.lastName?.[0] ?? ''}`.toUpperCase() || '?';
   }
 
   selectPosition(pos: string): void {

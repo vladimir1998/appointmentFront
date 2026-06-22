@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { QuillModule } from 'ngx-quill';
 import { ServicesApiService } from '../../core/services/services-api.service';
+import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
-import { MOCK_SERVICES } from '../../core/mocks/mock-services';
-import { MOCK_EMPLOYEES } from '../../core/mocks/mock-employees';
 import { Employee } from '../../core/models/employee.model';
+import { PriceType } from '../../core/models/service.model';
 import { InputComponent } from '../../common/input/input.component';
 import { TextareaComponent } from '../../common/textarea/textarea.component';
 import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
@@ -21,6 +21,7 @@ import { AboutBlock } from '../../common/about-block/about-block';
 })
 export class AdminServiceForm implements OnInit {
   private readonly api = inject(ServicesApiService);
+  private readonly employeesApi = inject(EmployeesApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly orgContext = inject(OrganizationContextService);
@@ -32,9 +33,19 @@ export class AdminServiceForm implements OnInit {
   description = '';
   photo = '';
   price: number | null = null;
+  priceMax: number | null = null;
+  priceType: PriceType = 'exact';
+  priceComment = '';
   duration: number | null = null;
   durationMax: number | null = null;
   about: string[] = [''];
+
+  readonly priceTypeOptions: { value: PriceType; label: string }[] = [
+    { value: 'exact',       label: 'Exact' },
+    { value: 'approximate', label: 'Approximate' },
+    { value: 'from',        label: 'From' },
+    { value: 'range',       label: 'From – To' },
+  ];
 
 
   selectedEmployees: Employee[] = [];
@@ -70,7 +81,11 @@ export class AdminServiceForm implements OnInit {
   ngOnInit(): void {
     this.serviceId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.serviceId;
-    this.availableEmployees.set(MOCK_EMPLOYEES);
+
+    this.employeesApi.getAll().subscribe({
+      next: (data) => this.availableEmployees.set(data),
+      error: () => this.availableEmployees.set([]),
+    });
 
     if (this.isEdit && this.serviceId) {
       this.fetchLoading.set(true);
@@ -80,6 +95,9 @@ export class AdminServiceForm implements OnInit {
           this.description = service.description;
           this.photo = service.photo ?? '';
           this.price = service.price;
+          this.priceMax = service.priceMax ?? null;
+          this.priceType = service.priceType ?? 'exact';
+          this.priceComment = service.priceComment ?? '';
           this.duration = service.duration;
           this.durationMax = service.durationMax ?? null;
           this.about = service.about?.length ? [...service.about] : [''];
@@ -87,19 +105,7 @@ export class AdminServiceForm implements OnInit {
           this.fetchLoading.set(false);
         },
         error: () => {
-          const mock = MOCK_SERVICES.find(s => s.id === this.serviceId);
-          if (mock) {
-            this.title = mock.title;
-            this.description = mock.description;
-            this.photo = mock.photo ?? '';
-            this.price = mock.price;
-            this.duration = mock.duration;
-            this.durationMax = mock.durationMax ?? null;
-            this.about = mock.about?.length ? [...mock.about] : [''];
-            this.selectedEmployees = mock.employee ? [...mock.employee] : [];
-          } else {
-            this.error.set('Failed to load service');
-          }
+          this.error.set('Failed to load service');
           this.fetchLoading.set(false);
         },
       });
@@ -117,6 +123,9 @@ export class AdminServiceForm implements OnInit {
       description: this.description,
       ...(this.photo && { photo: this.photo }),
       price: this.price!,
+      ...(this.priceType !== 'exact' && { priceType: this.priceType }),
+      ...(this.priceType === 'range' && this.priceMax != null && { priceMax: this.priceMax }),
+      ...(this.priceComment.trim() && { priceComment: this.priceComment.trim() }),
       duration: this.duration!,
       ...(this.durationMax != null && { durationMax: this.durationMax }),
       ...(about.length && { about }),
@@ -155,4 +164,17 @@ export class AdminServiceForm implements OnInit {
 
   get durationMaxStr(): string { return this.durationMax?.toString() ?? ''; }
   set durationMaxStr(v: string) { this.durationMax = v !== '' ? +v : null; }
+
+  get priceMaxStr(): string { return this.priceMax?.toString() ?? ''; }
+  set priceMaxStr(v: string) { this.priceMax = v !== '' ? +v : null; }
+
+  get priceLabel(): string {
+    switch (this.priceType) {
+      case 'approximate': return this.price != null ? `~${this.price} ₽` : '—';
+      case 'from':        return this.price != null ? `from ${this.price} ₽` : '—';
+      case 'range':       return (this.price != null && this.priceMax != null)
+                            ? `${this.price}–${this.priceMax} ₽` : '—';
+      default:            return this.price != null ? `${this.price} ₽` : '—';
+    }
+  }
 }

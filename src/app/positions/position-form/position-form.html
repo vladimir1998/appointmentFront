@@ -17,30 +17,34 @@
       <div class="permissions-section">
         <p class="permissions-title">Права доступа</p>
 
-        @for (mod of permissionsConfig; track mod.key) {
-          <div class="permission-module">
-            <label class="module-header">
-              <input
-                type="checkbox"
-                [checked]="isModuleAllChecked(mod)"
-                (change)="toggleModule(mod)"
-              />
-              <span class="module-name">{{ mod.module }}</span>
-            </label>
+        @if (permissionsLoading()) {
+          <p class="status">Загрузка прав...</p>
+        } @else {
+          @for (group of groupedPermissions(); track group.module) {
+            <div class="permission-module">
+              <label class="module-header">
+                <input
+                  type="checkbox"
+                  [checked]="isModuleAllChecked(group.perms)"
+                  (change)="toggleModule(group.perms)"
+                />
+                <span class="module-name">{{ group.module }}</span>
+              </label>
 
-            <div class="module-actions">
-              @for (action of mod.actions; track action.key) {
-                <label class="action-label">
-                  <input
-                    type="checkbox"
-                    [checked]="isChecked(mod.key, action.key)"
-                    (change)="togglePermission(mod.key, action.key)"
-                  />
-                  {{ action.label }}
-                </label>
-              }
+              <div class="module-actions">
+                @for (perm of group.perms; track perm.id) {
+                  <label class="action-label">
+                    <input
+                      type="checkbox"
+                      [checked]="isChecked(perm.id)"
+                      (change)="togglePermission(perm.id)"
+                    />
+                    {{ perm.name }}
+                  </label>
+                }
+              </div>
             </div>
-          </div>
+          }
         }
       </div>
 

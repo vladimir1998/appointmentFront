@@ -13,7 +13,9 @@
     }
     <div class="emp-info">
       <div class="emp-name">{{ employee().firstName }} {{ employee().lastName }}</div>
-      @if (employee().position?.name) {
+      @if (employee().specialties?.length) {
+        <div class="emp-position">{{ specialtyNames() }}</div>
+      } @else if (employee().position?.name) {
         <div class="emp-position">{{ employee().position!.name }}</div>
       }
     </div>

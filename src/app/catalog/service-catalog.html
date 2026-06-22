@@ -28,7 +28,7 @@
 } @else {
   <div class="cards-grid">
     @for (s of filtered(); track s.id) {
-      <div class="card">
+      <div class="card" (click)="view(s)" style="cursor:pointer">
 
         <!-- Cover image -->
         <div class="card-cover">
@@ -62,14 +62,13 @@
 
         <!-- Footer -->
         <div class="card-footer">
-          <div class="card-price">
-            @if (s.price != null) {
-              {{ s.price | number:'1.0-0' }} ₽
-            } @else {
-              By agreement
+          <div class="card-price-block">
+            <div class="card-price">{{ formatPrice(s) }}</div>
+            @if (s.priceComment) {
+              <div class="card-price-comment">{{ s.priceComment }}</div>
             }
           </div>
-          <button class="btn-book">Book</button>
+          <button class="btn-book" (click)="$event.stopPropagation(); view(s)">Book</button>
         </div>
 
       </div>

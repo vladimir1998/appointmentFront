@@ -32,63 +32,69 @@
 
 <!-- Table card -->
 <div class="table-card">
-  <table class="data-table">
-    <thead>
-      <tr>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Sent</th>
-        <th>Status</th>
-        <th>Accepted</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for (invite of filtered(); track invite.id) {
-        <tr [class.row--accepted]="!!invite.acceptedAt" [class.row--pending]="!invite.acceptedAt">
-          <td class="cell-email">{{ invite.email }}</td>
-          <td>
-            <span class="role-badge role-badge--{{ invite.role.toLowerCase() }}">{{ invite.role }}</span>
-          </td>
-          <td class="cell-date">
-            <div>{{ formatDate(invite.sentAt) }}</div>
-            <div class="cell-time">{{ formatTime(invite.sentAt) }}</div>
-          </td>
-          <td>
-            @if (invite.acceptedAt) {
-              <div class="status-badge status-badge--accepted">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                Accepted
-              </div>
-            } @else {
-              <div class="status-badge status-badge--pending">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"/>
-                  <polyline points="12 6 12 12 16 14"/>
-                </svg>
-                Pending
-              </div>
-            }
-          </td>
-          <td class="cell-date">
-            @if (invite.acceptedAt) {
-              <div>{{ formatDate(invite.acceptedAt) }}</div>
-              <div class="cell-time">{{ formatTime(invite.acceptedAt) }}</div>
-            } @else {
-              <span class="cell-empty">—</span>
-            }
-          </td>
-        </tr>
-      } @empty {
+  @if (loading()) {
+    <div class="empty-cell">Loading…</div>
+  } @else if (error()) {
+    <div class="empty-cell">{{ error() }}</div>
+  } @else {
+    <table class="data-table">
+      <thead>
         <tr>
-          <td colspan="5" class="empty-cell">No invites found</td>
+          <th>User</th>
+          <th>Email</th>
+          <th>Organization</th>
+          <th>Sent</th>
+          <th>Status</th>
+          <th>Accepted</th>
         </tr>
-      }
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        @for (invite of filtered(); track invite.id) {
+          <tr [class.row--accepted]="!!invite.acceptedAt" [class.row--pending]="!invite.acceptedAt">
+            <td class="cell-name">{{ userName(invite) }}</td>
+            <td class="cell-email">{{ invite.user.email }}</td>
+            <td class="cell-org">{{ invite.organization.name }}</td>
+            <td class="cell-date">
+              <div>{{ formatDate(invite.sentAt) }}</div>
+              <div class="cell-time">{{ formatTime(invite.sentAt) }}</div>
+            </td>
+            <td>
+              @if (invite.acceptedAt) {
+                <div class="status-badge status-badge--accepted">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Accepted
+                </div>
+              } @else {
+                <div class="status-badge status-badge--pending">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  Pending
+                </div>
+              }
+            </td>
+            <td class="cell-date">
+              @if (invite.acceptedAt) {
+                <div>{{ formatDate(invite.acceptedAt) }}</div>
+                <div class="cell-time">{{ formatTime(invite.acceptedAt) }}</div>
+              } @else {
+                <span class="cell-empty">—</span>
+              }
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-cell">No invites found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
 
-  <div class="table-footer">
-    {{ filtered().length }} invite{{ filtered().length !== 1 ? 's' : '' }}
-  </div>
+    <div class="table-footer">
+      {{ filtered().length }} invite{{ filtered().length !== 1 ? 's' : '' }}
+    </div>
+  }
 </div>

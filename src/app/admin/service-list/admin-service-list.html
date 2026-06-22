@@ -49,11 +49,12 @@
             <td><span class="svc-title">{{ s.title }}</span></td>
             <td><span class="svc-desc">{{ s.description }}</span></td>
             <td>
-              @if (s.price != null) {
-                <span class="svc-price">{{ s.price | number:'1.2-2' }} ₽</span>
-              } @else {
-                <span class="svc-empty">—</span>
-              }
+              <div class="svc-price-cell">
+                <span class="svc-price">{{ formatPrice(s) }}</span>
+                @if (s.priceComment) {
+                  <span class="svc-price-comment">{{ s.priceComment }}</span>
+                }
+              </div>
             </td>
             <td>
               @if (s.duration != null) {

@@ -142,7 +142,8 @@
               </svg>
               <input
                 class="user-search-input"
-                placeholder="Search services to add..."
+                [placeholder]="servicesLoading() ? 'Loading services...' : 'Search services to add...'"
+                [disabled]="servicesLoading()"
                 [value]="serviceSearch()"
                 (input)="serviceSearch.set($any($event.target).value); serviceDropdownOpen.set(true)"
                 (focus)="serviceDropdownOpen.set(true)"
@@ -173,6 +174,78 @@
                   </button>
                 } @empty {
                   <div class="user-option-empty">No services found</div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Section: Specialties -->
+        <div class="section">
+          <div class="section-head">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+              </svg>
+            </div>
+            <span class="section-title">Specialties</span>
+          </div>
+
+          <!-- Selected specialty tags -->
+          @if (selectedSpecialties.length) {
+            <div class="svc-tags">
+              @for (sp of selectedSpecialties; track sp.id) {
+                <span class="svc-tag">
+                  {{ sp.name }}
+                  <button type="button" class="svc-tag-remove" (click)="removeSpecialty(sp)" title="Remove">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                  </button>
+                </span>
+              }
+            </div>
+          }
+
+          <!-- Specialty search picker -->
+          <div class="svc-picker">
+            <div class="user-search-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input
+                class="user-search-input"
+                [placeholder]="specialtiesLoading() ? 'Loading specialties...' : 'Search specialties to add...'"
+                [disabled]="specialtiesLoading()"
+                [value]="specialtySearch()"
+                (input)="specialtySearch.set($any($event.target).value); specialtyDropdownOpen.set(true)"
+                (focus)="specialtyDropdownOpen.set(true)"
+                (blur)="specialtyDropdownOpen.set(false)"
+              />
+            </div>
+
+            @if (specialtyDropdownOpen()) {
+              <div class="user-dropdown">
+                @for (sp of filteredSpecialties(); track sp.id) {
+                  <button
+                    type="button"
+                    class="svc-option"
+                    [class.svc-option--selected]="isSpecialtySelected(sp)"
+                    (mousedown)="$event.preventDefault(); toggleSpecialty(sp)"
+                  >
+                    <div class="svc-option-check">
+                      @if (isSpecialtySelected(sp)) {
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      }
+                    </div>
+                    <div class="user-option-name">{{ sp.name }}</div>
+                  </button>
+                } @empty {
+                  <div class="user-option-empty">No specialties found</div>
                 }
               </div>
             }
@@ -321,6 +394,13 @@
             type="tel"
             placeholder="+1 555-000-0000"
             [(value)]="phone"
+          />
+
+          <app-input
+            label="Experience (years)"
+            type="number"
+            placeholder="e.g. 5"
+            [(value)]="experienceYears"
           />
 
           <app-textarea
@@ -570,7 +650,7 @@
       <button
         class="btn-submit"
         type="submit"
-        [disabled]="!firstName || !lastName || loading()"
+        [disabled]="(!isEdit && !linkedUser) || loading()"
       >
         @if (loading()) {
           <div class="spinner-sm"></div>

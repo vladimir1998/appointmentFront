@@ -5,13 +5,13 @@ import { OrganizationContextService } from '../../core/services/organization-con
 import { Position } from '../../core/models/position.model';
 
 const MOCK_POSITIONS: Position[] = [
-  { id: 'p1', name: 'Cardiologist',         permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
-  { id: 'p2', name: 'Dermatologist',        permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
-  { id: 'p3', name: 'Neurologist',          permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
-  { id: 'p4', name: 'Pediatrician',         permissions: ['appointments.view', 'appointments.edit', 'services.view'], organizationId: 'mock' },
-  { id: 'p5', name: 'General Practitioner', permissions: ['appointments.view', 'appointments.edit', 'services.view', 'employees.view'], organizationId: 'mock' },
-  { id: 'p6', name: 'Nurse',                permissions: ['appointments.view', 'services.view'], organizationId: 'mock' },
-  { id: 'p7', name: 'Receptionist',         permissions: ['appointments.view', 'appointments.create', 'clients.view'], organizationId: 'mock' },
+  { id: 'p1', name: 'Cardiologist',         permissions: [{ id: 'appointments.view', name: 'appointments.view', value: 'appointments.view' }, { id: 'appointments.edit', name: 'appointments.edit', value: 'appointments.edit' }, { id: 'services.view', name: 'services.view', value: 'services.view' }], organizationId: 'mock' },
+  { id: 'p2', name: 'Dermatologist',        permissions: [{ id: 'appointments.view', name: 'appointments.view', value: 'appointments.view' }, { id: 'appointments.edit', name: 'appointments.edit', value: 'appointments.edit' }, { id: 'services.view', name: 'services.view', value: 'services.view' }], organizationId: 'mock' },
+  { id: 'p3', name: 'Neurologist',          permissions: [{ id: 'appointments.view', name: 'appointments.view', value: 'appointments.view' }, { id: 'appointments.edit', name: 'appointments.edit', value: 'appointments.edit' }, { id: 'services.view', name: 'services.view', value: 'services.view' }], organizationId: 'mock' },
+  { id: 'p4', name: 'Pediatrician',         permissions: [{ id: 'appointments.view', name: 'appointments.view', value: 'appointments.view' }, { id: 'appointments.edit', name: 'appointments.edit', value: 'appointments.edit' }, { id: 'services.view', name: 'services.view', value: 'services.view' }], organizationId: 'mock' },
+  { id: 'p5', name: 'General Practitioner', permissions: [{ id: 'appointments.view', name: 'appointments.view', value: 'appointments.view' }, { id: 'appointments.edit', name: 'appointments.edit', value: 'appointments.edit' }, { id: 'services.view', name: 'services.view', value: 'services.view' }, { id: 'employees.view', name: 'employees.view', value: 'employees.view' }], organizationId: 'mock' },
+  { id: 'p6', name: 'Nurse',                permissions: [{ id: 'appointments.view', name: 'appointments.view', value: 'appointments.view' }, { id: 'services.view', name: 'services.view', value: 'services.view' }], organizationId: 'mock' },
+  { id: 'p7', name: 'Receptionist',         permissions: [{ id: 'appointments.view', name: 'appointments.view', value: 'appointments.view' }, { id: 'appointments.create', name: 'appointments.create', value: 'appointments.create' }, { id: 'clients.view', name: 'clients.view', value: 'clients.view' }], organizationId: 'mock' },
 ];
 
 @Component({

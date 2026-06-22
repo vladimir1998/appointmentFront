@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { orgGuard } from './core/guards/org.guard';
 import { Layout } from './layout/layout';
 import { Dashboard } from './dashboard/dashboard';
 import { Login } from './login/login';
@@ -20,9 +21,12 @@ import { AdminUserList } from './admin/user-list/admin-user-list';
 import { AdminInviteList } from './admin/invite-list/admin-invite-list';
 import { AdminLayout } from './admin/admin-layout/admin-layout';
 import { AdminDashboard } from './admin/admin-dashboard/admin-dashboard';
+import { AdminSpecialtyList } from './admin/specialty-list/admin-specialty-list';
+import { AdminSpecialtyForm } from './admin/specialty-form/admin-specialty-form';
 import { Components } from './components/components';
 import { Example } from './example/example';
 import { ServiceCatalog } from './catalog/service-catalog';
+import { ServiceDetail } from './services/service-detail/service-detail';
 
 export const routes: Routes = [
   { path: 'login', component: Login },
@@ -30,6 +34,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayout,
+    canActivate: [orgGuard],
     children: [
       { path: '', component: AdminDashboard },
       { path: 'invite', component: AdminInvite },
@@ -44,23 +49,27 @@ export const routes: Routes = [
       { path: 'positions', component: AdminPositionList },
       { path: 'positions/create', component: AdminPositionForm },
       { path: 'positions/:id/edit', component: AdminPositionForm },
+      { path: 'specialties', component: AdminSpecialtyList },
+      { path: 'specialties/create', component: AdminSpecialtyForm },
+      { path: 'specialties/:id/edit', component: AdminSpecialtyForm },
     ],
   },
   {
     path: '',
     component: Layout,
     children: [
-      { path: 'services', component: ServiceCatalog },
-      { path: 'employees', component: EmployeeList },
-      { path: 'employees/:id', component: EmployeeDetail },
-      { path: 'components', component: Components },
-      { path: 'example', component: Example },
-      { path: 'dashboard/:orgId', component: Dashboard },
       { path: 'organizations', component: OrganizationList },
       { path: 'organizations/create', component: OrganizationCreate },
-      { path: 'appointments', component: AppointmentList },
-      { path: 'appointments/create', component: AppointmentForm },
-      { path: 'appointments/:id/edit', component: AppointmentForm },
+      { path: 'dashboard/:orgId', component: Dashboard },
+      { path: 'services', component: ServiceCatalog, canActivate: [orgGuard] },
+      { path: 'services/:id', component: ServiceDetail, canActivate: [orgGuard] },
+      { path: 'employees', component: EmployeeList, canActivate: [orgGuard] },
+      { path: 'employees/:id', component: EmployeeDetail, canActivate: [orgGuard] },
+      { path: 'components', component: Components },
+      { path: 'example', component: Example },
+      { path: 'appointments', component: AppointmentList, canActivate: [orgGuard] },
+      { path: 'appointments/create', component: AppointmentForm, canActivate: [orgGuard] },
+      { path: 'appointments/:id/edit', component: AppointmentForm, canActivate: [orgGuard] },
       { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },

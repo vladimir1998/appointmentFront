@@ -78,21 +78,64 @@
           <div class="section-head">
             <div class="section-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
               </svg>
             </div>
             <span class="section-title">Pricing &amp; Duration</span>
           </div>
 
-          <div class="fields-row">
+          <!-- Price type selector -->
+          <div class="price-type-group">
+            @for (opt of priceTypeOptions; track opt.value) {
+              <button
+                type="button"
+                class="price-type-btn"
+                [class.price-type-btn--active]="priceType === opt.value"
+                (click)="priceType = opt.value"
+              >{{ opt.label }}</button>
+            }
+          </div>
+
+          <!-- Price inputs -->
+          @if (priceType === 'range') {
+            <div class="fields-row fields-row--2">
+              <app-input
+                label="From"
+                type="number"
+                placeholder="0"
+                prefix="₽"
+                [required]="true"
+                [(value)]="priceStr"
+              />
+              <app-input
+                label="To"
+                type="number"
+                placeholder="0"
+                prefix="₽"
+                [required]="true"
+                [(value)]="priceMaxStr"
+              />
+            </div>
+          } @else {
             <app-input
-              label="Price"
+              [label]="priceType === 'exact' ? 'Price' : priceType === 'approximate' ? 'Approximate price' : 'Price from'"
               type="number"
-              placeholder="0.00"
+              placeholder="0"
               prefix="₽"
               [required]="true"
               [(value)]="priceStr"
             />
+          }
+
+          <!-- Price comment -->
+          <app-input
+            label="Price comment"
+            placeholder="e.g. depends on the complexity of the work"
+            [(value)]="priceComment"
+          />
+
+          <!-- Duration -->
+          <div class="fields-row">
             <app-input
               label="Duration"
               type="number"
@@ -240,7 +283,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
-            <span>{{ price != null ? (price | number:'1.0-2') + ' ₽' : '—' }}</span>
+            <span>{{ priceLabel }}</span>
           </div>
           <div class="summary-row">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -262,7 +305,7 @@
     <!-- Form actions -->
     <div class="form-actions">
       <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
-      <button class="btn-submit" type="submit" [disabled]="!title || !description || !price || !duration || loading()">
+      <button class="btn-submit" type="submit" [disabled]="!title || !description || !price || (priceType === 'range' && !priceMax) || !duration || loading()">
         @if (loading()) {
           <div class="spinner-sm"></div>
           Saving...

@@ -86,34 +86,9 @@
   }
 }
 
-/* Cells */
-.pos-name {
+.sp-name {
   font-weight: 600;
   color: var(--text);
-  white-space: nowrap;
-}
-
-.svc-empty {
-  color: var(--text-subtle);
-}
-
-/* Permissions */
-.perm-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.perm-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--teal-50);
-  color: var(--teal-600);
-  font-size: 11.5px;
-  font-weight: 500;
-  white-space: nowrap;
 }
 
 /* Actions */
