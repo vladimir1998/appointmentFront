@@ -101,7 +101,7 @@ export class AdminServiceForm implements OnInit {
           this.duration = service.duration;
           this.durationMax = service.durationMax ?? null;
           this.about = service.about?.length ? [...service.about] : [''];
-          this.selectedEmployees = service.employee ? [...service.employee] : [];
+          this.selectedEmployees = service.employees ? [...service.employees] : [];
           this.fetchLoading.set(false);
         },
         error: () => {
@@ -129,6 +129,7 @@ export class AdminServiceForm implements OnInit {
       duration: this.duration!,
       ...(this.durationMax != null && { durationMax: this.durationMax }),
       ...(about.length && { about }),
+      employeeIds: this.selectedEmployees.map(e => e.id),
     };
 
     const request$ = this.isEdit

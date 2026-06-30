@@ -1,12 +1,14 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { ServicesApiService } from '../../core/services/services-api.service';
+import { EmployeesApiService } from '../../core/services/employees-api.service';
 import { OrganizationContextService } from '../../core/services/organization-context.service';
 import { InputComponent } from '../../common/input/input.component';
 import { TextareaComponent } from '../../common/textarea/textarea.component';
 import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url-picker.component';
+import { Employee } from '../../core/models/employee.model';
 
 @Component({
   selector: 'app-service-form',
@@ -16,6 +18,7 @@ import { ImageUrlPickerComponent } from '../../common/image-url-picker/image-url
 })
 export class ServiceForm implements OnInit {
   private readonly api = inject(ServicesApiService);
+  private readonly employeesApi = inject(EmployeesApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly orgContext = inject(OrganizationContextService);
@@ -30,13 +33,58 @@ export class ServiceForm implements OnInit {
   duration: number | null = null;
   durationMax: number | null = null;
 
+  employees = signal<Employee[]>([]);
+  employeesLoading = signal(false);
+  selectedEmployees: Employee[] = [];
+  employeeSearch = signal('');
+  employeeDropdownOpen = signal(false);
+
   loading = signal(false);
   fetchLoading = signal(false);
   error = signal<string | null>(null);
 
+  filteredEmployees = computed(() => {
+    const q = this.employeeSearch().toLowerCase();
+    if (!q) return this.employees();
+    return this.employees().filter(e =>
+      `${e.firstName ?? ''} ${e.lastName ?? ''}`.toLowerCase().includes(q) ||
+      e.user.email.toLowerCase().includes(q)
+    );
+  });
+
+  isEmployeeSelected(emp: Employee): boolean {
+    return this.selectedEmployees.some(e => e.id === emp.id);
+  }
+
+  toggleEmployee(emp: Employee): void {
+    if (this.isEmployeeSelected(emp)) {
+      this.selectedEmployees = this.selectedEmployees.filter(e => e.id !== emp.id);
+    } else {
+      this.selectedEmployees = [...this.selectedEmployees, emp];
+    }
+  }
+
+  removeEmployee(emp: Employee): void {
+    this.selectedEmployees = this.selectedEmployees.filter(e => e.id !== emp.id);
+  }
+
+  employeeLabel(emp: Employee): string {
+    const name = [emp.firstName, emp.lastName].filter(Boolean).join(' ');
+    return name || emp.user.email;
+  }
+
   ngOnInit(): void {
     this.serviceId = this.route.snapshot.paramMap.get('id');
     this.isEdit = !!this.serviceId;
+
+    this.employeesLoading.set(true);
+    this.employeesApi.getAll().subscribe({
+      next: (data) => {
+        this.employees.set(data);
+        this.employeesLoading.set(false);
+      },
+      error: () => this.employeesLoading.set(false),
+    });
 
     if (this.isEdit && this.serviceId) {
       this.fetchLoading.set(true);
@@ -48,6 +96,7 @@ export class ServiceForm implements OnInit {
           this.price = service.price;
           this.duration = service.duration;
           this.durationMax = service.durationMax ?? null;
+          this.selectedEmployees = service.employees ? [...service.employees] : [];
           this.fetchLoading.set(false);
         },
         error: () => {
@@ -69,6 +118,7 @@ export class ServiceForm implements OnInit {
       price: this.price!,
       duration: this.duration!,
       ...(this.durationMax != null && { durationMax: this.durationMax }),
+      employeeIds: this.selectedEmployees.map(e => e.id),
     };
 
     const request$ = this.isEdit

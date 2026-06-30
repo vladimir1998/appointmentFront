@@ -49,7 +49,7 @@ export class AdminServiceList implements OnInit {
   }
 
   employeesFor(service: Service) {
-    return service.employee ?? [];
+    return service.employees ?? [];
   }
 
   initials(firstName: string | undefined, lastName: string | undefined): string {

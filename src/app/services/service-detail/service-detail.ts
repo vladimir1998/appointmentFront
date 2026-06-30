@@ -38,7 +38,7 @@ export class ServiceDetail implements OnInit {
         this.safeAbout.set(
           (service.about ?? []).map(b => this.sanitizer.bypassSecurityTrustHtml(b))
         );
-        this.employees.set(service.employee ?? []);
+        this.employees.set(service.employees ?? []);
         this.loading.set(false);
       },
       error: () => {

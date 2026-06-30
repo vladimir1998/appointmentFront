@@ -227,5 +227,5 @@ export const MOCK_EMPLOYEES: Employee[] = [
 
 // Patch MOCK_SERVICES with their employees (avoids circular import)
 MOCK_SERVICES.forEach(svc => {
-  svc.employee = MOCK_EMPLOYEES.filter(e => e.services?.some(s => s.id === svc.id));
+  svc.employees = MOCK_EMPLOYEES.filter(e => e.services?.some(s => s.id === svc.id));
 });

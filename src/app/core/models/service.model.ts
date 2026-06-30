@@ -15,7 +15,7 @@ export interface Service {
   durationMax?: number;
   about?: string[];
   organizationId: string;
-  employee?: Employee[];
+  employees?: Employee[];
 }
 
 export interface CreateServiceRequest {
@@ -43,4 +43,5 @@ export interface UpdateServiceRequest {
   duration?: number;
   durationMax?: number;
   about?: string[];
+  employeeIds?: string[];
 }
