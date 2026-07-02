@@ -23,6 +23,7 @@ import { AdminLayout } from './admin/admin-layout/admin-layout';
 import { AdminDashboard } from './admin/admin-dashboard/admin-dashboard';
 import { AdminSpecialtyList } from './admin/specialty-list/admin-specialty-list';
 import { AdminSpecialtyForm } from './admin/specialty-form/admin-specialty-form';
+import { AdminAppointmentList } from './admin/appointment-list/admin-appointment-list';
 import { Components } from './components/components';
 import { Example } from './example/example';
 import { ServiceCatalog } from './catalog/service-catalog';
@@ -52,6 +53,7 @@ export const routes: Routes = [
       { path: 'specialties', component: AdminSpecialtyList },
       { path: 'specialties/create', component: AdminSpecialtyForm },
       { path: 'specialties/:id/edit', component: AdminSpecialtyForm },
+      { path: 'appointments', component: AdminAppointmentList },
     ],
   },
   {

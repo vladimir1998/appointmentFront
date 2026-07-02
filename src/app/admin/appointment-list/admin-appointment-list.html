@@ -1,0 +1,91 @@
+<!-- Page header -->
+<div class="page-head">
+  <div>
+    <h1 class="page-title">Appointments</h1>
+    <p class="page-sub">All bookings across your organization</p>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="search-wrap">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input
+      class="search-input"
+      placeholder="Search by client, service or employee..."
+      [value]="searchQuery()"
+      (input)="searchQuery.set($any($event.target).value)"
+    />
+  </div>
+</div>
+
+<!-- Table card -->
+<div class="table-card">
+
+  @if (loading()) {
+    <div class="state-row">
+      <div class="spinner"></div>
+      <span>Loading...</span>
+    </div>
+  } @else if (error()) {
+    <div class="state-row state-row--error">{{ error() }}</div>
+  } @else {
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Client</th>
+          <th>Service</th>
+          <th>Employee</th>
+          <th>Date & Time</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of filtered(); track row.appointment.id) {
+          <tr>
+            <!-- Client -->
+            <td>
+              <div class="client-name">{{ row.appointment.clientName }}</div>
+              @if (row.appointment.clientPhone) {
+                <div class="client-phone">{{ row.appointment.clientPhone }}</div>
+              }
+            </td>
+
+            <!-- Service -->
+            <td class="cell-muted">{{ row.serviceName }}</td>
+
+            <!-- Employee -->
+            <td class="cell-muted">{{ row.employeeName }}</td>
+
+            <!-- Date & Time -->
+            <td class="cell-muted cell-nowrap">{{ formatDateTime(row.appointment.startTime) }}</td>
+
+            <!-- Status -->
+            <td>
+              <span class="status-badge status-badge--{{ row.appointment.status }}">
+                {{ statusLabel(row.appointment.status) }}
+              </span>
+            </td>
+
+            <!-- Notes -->
+            <td class="cell-notes">{{ row.appointment.notes || '—' }}</td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-cell">No appointments found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="table-footer">
+      {{ filtered().length }} appointment{{ filtered().length !== 1 ? 's' : '' }}
+    </div>
+
+  }
+
+</div>

@@ -6,5 +6,5 @@ import { Component, input } from '@angular/core';
   styleUrl: './detail-card.scss',
 })
 export class DetailCard {
-  title = input.required<string>();
+  title = input<string>();
 }

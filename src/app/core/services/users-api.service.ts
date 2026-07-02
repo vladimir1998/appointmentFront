@@ -14,4 +14,8 @@ export class UsersApiService {
     if (email) params['email'] = email;
     return this.http.get<User[]>(`${BASE_URL}/users`, { params });
   }
+
+  remove(id: string): Observable<void> {
+    return this.http.delete<void>(`${BASE_URL}/users/${id}`);
+  }
 }
